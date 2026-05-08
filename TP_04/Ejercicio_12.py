@@ -6,5 +6,8 @@ print('ingrese un rango de numeros')
 menor = int(input('ingrese el limite menor: '))
 mayor = int(input('ingrese el limite mayor: '))
 
-for i in range(menor,mayor+1):
-    print('\t'+str(i))
+if menor > mayor:
+    print('el menor es mayor!')
+else:
+    for i in range(menor,mayor+1):
+        print('\t'+str(i))
