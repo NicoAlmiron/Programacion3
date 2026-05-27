@@ -4,17 +4,57 @@ def limpiar_consola():
     os.system('cls' if os.name == 'nt' else 'clear')
 #lo anterior se realiza para poder limpiar la consola
 
-# libro = {
-#         "codigo": 0,
-#         "titulo": "",
-#         "autor": "",
-#         "categoria": "",
-#         "stock": "",
-#      }
 
-libros = []
+libros = [
+    {
+        "codigo": 0,
+        "titulo": "harry potter",
+        "autor": "jk rowling",
+        "categoria": "redes",
+        "stock": "18",
+     },
+     {
+        "codigo": 1,
+        "titulo": "SQlite",
+        "autor": "pepito",
+        "categoria": "redes",
+        "stock": "18",
+     },
+     {
+        "codigo": 2,
+        "titulo": "prueba",
+        "autor": "pepito",
+        "categoria": "redes",
+        "stock": "18",
+     },
+]
 
-prestamos = []
+prestamos = [
+    {
+        "prestamoId": 0,
+        "nombre": "Nicolas almiron",
+        "fechaActual": "22-05-2026",
+        "fechaEntrega": "",
+        "codigoLibro": 0,
+        "entregado": False,
+    },
+    {
+        "prestamoId": 1,
+        "nombre": "Cosme fulanito",
+        "fechaActual": "20-05-2026",
+        "fechaEntrega": "",
+        "codigoLibro": 0,
+        "entregado": False,
+    },
+    {
+        "prestamoId": 2,
+        "nombre": "pepito",
+        "fechaActual": "23-05-2026",
+        "fechaEntrega": "",
+        "codigoLibro": 2,
+        "entregado": False,
+    }
+]
 
 categorias = ("Programación", "Base de Datos", "Redes", "Electronica")
 
@@ -22,9 +62,9 @@ categorias = ("Programación", "Base de Datos", "Redes", "Electronica")
 def agregar_libro():
     print('-------|###| BIBLIOTECA |###|-------')
     print('-------|# Agregar un libro #|-------')
-    codigo = len(libros) + 1
-    titulo = input('Titulo: ')
-    autor = input('Autor: ')
+    codigo = len(libros)
+    titulo = input('Titulo: ').lower()
+    autor = input('Autor: ').lower()
     print('Categorias: ')
     for _ in range(len(categorias)):
             print(f"-({_}): {categorias[_]}")
@@ -61,7 +101,7 @@ def buscar_libro():
     print('-------|###| BIBLIOTECA |###|-------')
     print('-------|#  Buscar libros   #|-------')
     print('ingrese el titulo del libro')
-    tituloLibro = input('Titulo:  ')
+    tituloLibro = input('Titulo:  ').lower()
     
     for libro in libros:
         if libro.get('titulo') == tituloLibro:
@@ -78,7 +118,9 @@ def prestar_libro():
     print('-------|###| BIBLIOTECA |###|-------')
     print('-------|#Solicitar Prestamo#|-------')
     while True:
-        libroAPrestar= input('--#Titulo del Libro: ')
+        libroAPrestar = input('--#Titulo del Libro (para salir digitar "Salir"): ')
+        if libroAPrestar.lower() == 'salir':
+            break
         for libro in libros:
             if libro.get('titulo') == libroAPrestar:
                 print(f'--|#Codigo: {libro.get('codigo')}')
@@ -88,12 +130,15 @@ def prestar_libro():
                 print(f'#Stock: {libro.get('stock')}')
                 
                 confirmar = input('Confirmar este libro? (S/N):')
-                if confirmar == "S" :
+                if confirmar.lower() == "s":
+                    idprestamo = len(prestamos)
                     print('se confirmo')
-                    nombre = input('Nombre completo: ')
+                    nombre = input('Nombre completo: ').lower()
                     fechaActual = input('Fecha Actual (dd-mm-aaaa): ')
-                    codigoLibro = libro['codigo']                    
+                    codigoLibro = int(libro.get('codigo'))
+                    libro['stock'] = int(libro.get('stock')) - 1
                     prestamo = {
+                        "prestamoId": idprestamo,
                         "nombre": nombre,
                         "fechaActual": fechaActual,
                         "fechaEntrega": "",
@@ -102,9 +147,76 @@ def prestar_libro():
                     }
                     
                     prestamos.append(prestamo)
+                    break
             else:
                 print('No se encontro el libro')
+    input('Precione cualquier tecla para continuar...')
+
+def mostrar_prestamos():
+    print('-------|###| BIBLIOTECA |###|-------')
+    print('-----|# Lista de Prestamos #|-------')
+    for prestamo in prestamos:
+        print(f'--|#Id Prestamo: {prestamo['prestamoId']}')
+        print(f'#Nombre: {prestamo['nombre']}')
+        print(f'#Fecha Actual: {prestamo['fechaActual']}')
+        print(f'#Fecha Entrega: {prestamo['fechaEntrega']}')
+        print(f'#Libro: {libros[prestamo.get('codigoLibro')].get('titulo')}')
+        if prestamo.get('entregado') == False:
+            print(f'#Entregado?: *No entregado*')
+        elif prestamo.get('entregado') == True:
+            print(f'#Entregado?: Entregado')
+
+    input('Precione cualquier tecla para continuar...')
         
+
+
+def devolver_prestamo():
+    print('-------|###| BIBLIOTECA |###|-------')
+    print('-------|#Devolver Prestamo#|-------')
+    print('ingrese el nombre de la persona y el titulo del libro')
+    nombre = input('#Nombre: ').lower()
+    titulo = input('#Titulo: ').lower()
+    codigo = 0
+    for prestamo in prestamos:
+        if prestamo.get('nombre') == nombre:
+            for libro in libros:
+                
+                if libro.get('titulo') == titulo:
+                    codigo = int(libro.get('codigo'))
+            if prestamo.get('codigoLibro') == codigo:
+                print('---|#Prestamos encontrado!')
+                print(f'--|#Id Prestamo: {prestamo['prestamoId']}')
+                print(f'#Fecha Actual: {prestamo['fechaActual']}')
+                print(f'#Fecha Entrega: {prestamo['fechaEntrega']}')
+                if prestamo.get('entregado') == False:
+                    print(f'#Entregado?: *No entregado*')
+                elif prestamo.get('entregado') == True:
+                    print(f'#Entregado?: Entregado')
+                confirmar = input('---|###Confirmar la devolucion? (S/N) --> ')
+                fechaDeEntrega = input('#Fecha Actual (dd-mm-aaa): ')
+                if confirmar.lower() == 's':
+                    prestamo['fechaEntrega'] = fechaDeEntrega
+                    prestamo['entregado'] = True
+                    print('---|#Devolucion Exitosa!')
+                    break
+                elif confirmar.lower() == 'n': 
+                    print('---|#Devolucion cancelada!')    
+            else:
+                print('-|#No se encontro el libro registrado con ese nombre!')
+                break
+    input('Precione cualquier tecla para continuar...')
+
+
+def eliminar_libro():
+    print('-------|###| BIBLIOTECA |###|-------')
+    print('-------|#  Eliminar Libro  #|-------')
+    titulo = input('#Titulo: ').lower()
+    for libro in libros:
+        if libro.get('titulo') == titulo:
+            libros.remove(libro)
+            print('Se elimino correctamente!')
+    input('Precione cualquier tecla para continuar...')
+    
 
 while True:
     limpiar_consola()
@@ -112,11 +224,11 @@ while True:
     print('-( 1 )- - - -> Agregar Libro')
     print('-( 2 )- - - -> Mostrar Libros')
     print('-( 3 )- - - -> Buscar Libros')
-    print('-( 4 )- - - -> X')
-    print('-( 5 )- - - -> X')
-    print('-( 6 )- - - -> X')
-    print('-( 7 )- - - -> Agregar Categoria')
-    print('-( 8 )- - - -> Salir')
+    print('-( 4 )- - - -> Prestar Libro')
+    print('-( 5 )- - - -> Listar Prestamos')
+    print('-( 6 )- - - -> Devolver Prestamo')
+    print('-( 7 )- - - -> Eliminar Libro')
+    print('-( 0 )- - - -> Salir')
     opcion = int(input('-( OPCION )- ->: '))
 
     limpiar_consola()
@@ -128,12 +240,14 @@ while True:
     elif opcion == 3:
         buscar_libro()
     elif opcion == 4:
-        print('-( 4 )- - -> Prestar Libro')
+        prestar_libro()
     elif opcion == 5:
-        print('-( 5 )- - -> Devolver Libro')
+        mostrar_prestamos()
     elif opcion == 6:
-        print('-( 6 )- - -> Eliminar Libro')
-    elif opcion == 8:
+        devolver_prestamo()
+    elif opcion == 7:
+        eliminar_libro()
+    elif opcion == 0:
         break
     else:
         print('-( X )- - -> opcion incorrecta')
