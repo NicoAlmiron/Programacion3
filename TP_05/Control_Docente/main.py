@@ -30,12 +30,22 @@ alumnos = [
             "Matematica": [8,6],
             "Base de datos": [10,6,6]
         }
+    },
+    {
+        "idAlumno": 2,
+        "dni": "111",
+        "nombre": "cosme fulanito",
+        "notas": {
+            "Programacion": [4,1,3],
+            "Matematica": [3,2],
+            "Base de datos": [2,3,1]
+        }
     }
 ]
 
 
 
-def listar_Alumnos():
+def listar_alumnos():
     print('|-|-|-|-|-|## CONTROL DE ALUMNOS ##|-|-|-|-|-|')
     print('|#| Listado de Alumnos |#|')
     for alumno in alumnos: # Se recorre la lista de alumnos
@@ -286,8 +296,119 @@ def buscar_alumno():
                 break
             case _:
                 print('|#|*** INGRESE UNA OPCION VALIDA ***|#|')
-                
         input('|#| Pulse cualquier tecla para continuar....')
+
+def alumnos_aprobados():
+    while True:
+        limpiar_consola()
+        print('|-|-|-|-|-|## CONTROL DE ALUMNOS ##|-|-|-|-|-|')
+        print('|#| Alumnos Aprobados |#|')
+        print('|#| ( 1 ) --> Listar Todos los Aprobados')
+        print('|#| ( 2 ) --> Buscar Alumo Aprobado')
+        print('|#| ( 0 ) --> Salir')
+        
+        opcion = input('|#| OPCION ------------: ')
+        match opcion:
+            case "1":
+                print('|#-- Lista de Alumnos con sus Materias Aprobadas')
+                for alumno in alumnos: # Se recorre la lista de alumnos
+                    bandera = [] # coloco una lista para verificar que se muestren las materias correspondiente
+                    cadena = '| El Alumno '+ alumno['nombre'] + ' aprobo:'
+                    for key, value in alumno['notas'].items(): # aqui se recorre el diccionario "notas"
+                        prom = sum(value) / len(value)
+                        if prom >= 6:
+                            cadena += " - "+key
+                            bandera.append(True)
+                        else:
+                            bandera.append(False)
+                    if True in bandera:
+                        print(cadena)
+                    
+                    
+            case "2":
+                print('|#-- Ingrese el DNI del alumno')
+                dni = input('|#| DNI: ')
+                for alumno in alumnos: # Se recorre la lista de alumnos
+                    bandera = []
+                    if alumno['dni'] == dni:
+                        #for clave, valor in alumno.items():
+                        cadena = '| El Alumno '+ alumno['nombre'] + ' aprobo:'
+                        #    if clave == 'notas':
+                        for key, value in alumno['notas'].items(): # aqui se recorre el diccionario "notas"
+                            prom = sum(value) / len(value)
+                            if prom >= 6:
+                                cadena += " - "+ key
+                                bandera.append(True)
+                            else:
+                                bandera.append(False)
+                if True in bandera:
+                    print(cadena) 
+                else:
+                    print('| No se contro notas aprobadas') 
+            case "0": 
+                print('|#| SALIENDO.....')
+                break
+            case _:
+                print('|#|*** INGRESE UNA OPCION VALIDA ***|#|')
+
+        input('|#| Pulse cualquier tecla para continuar....')
+
+
+def alumnos_desaprobados():
+    while True:
+        limpiar_consola()
+        print('|-|-|-|-|-|## CONTROL DE ALUMNOS ##|-|-|-|-|-|')
+        print('|#| Alumnos Desaprobados |#|')
+        print('|#| ( 1 ) --> Listar Todos los Desaprobados')
+        print('|#| ( 2 ) --> Buscar Alumno Desaprobados')
+        print('|#| ( 0 ) --> Salir')
+        
+        opcion = input('|#| OPCION ------------: ')
+        match opcion:
+            case "1":
+                print('|#-- Lista de Alumnos con sus Materias Desaprobadas')
+                for alumno in alumnos: # Se recorre la lista de alumnos
+                    bandera = []
+                    cadena = '| El Alumno '+ alumno['nombre'] + ' desaprobo:'
+                    for key, value in alumno['notas'].items(): # aqui se recorre el diccionario "notas"
+                        prom = sum(value) / len(value)
+                        if prom < 6:
+                            cadena += " - " + key
+                            bandera.append(True)
+                        else:
+                            bandera.append(False)
+                    if True in bandera:
+                        print(cadena)
+                    
+                    
+            case "2":
+                print('|#-- Ingrese el DNI del alumno')
+                dni = input('|#| DNI: ')
+                for alumno in alumnos: # Se recorre la lista de alumnos
+                    bandera = []
+                    if alumno['dni'] == dni:
+                        #for clave, valor in alumno.items():
+                        cadena = '| El Alumno '+ alumno['nombre'] + ' desaprobo:'
+                        #    if clave == 'notas':
+                        for key, value in alumno['notas'].items(): # aqui se recorre el diccionario "notas"
+                            prom = sum(value) / len(value)
+                            if prom < 6:
+                                cadena += " - "+ key
+                                bandera.append(True)
+                            else:
+                                bandera.append(False)
+                if True in bandera:
+                    print(cadena) 
+                else:
+                    print('| No se contro notas desaprobadas') 
+            case "0": 
+                print('|#| SALIENDO.....')
+                break
+            case _:
+                print('|#|*** INGRESE UNA OPCION VALIDA ***|#|')
+
+        input('|#| Pulse cualquier tecla para continuar....')
+
 
 # Se inicia un bucle que contendra el menu interactivo
 while True: 
@@ -300,8 +421,8 @@ while True:
     print('|#| ( 3 ) -----> Mostrar Alumnos')
     print('|#| ( 4 ) -----> Calcular Promedios')
     print('|#| ( 5 ) -----> Buscar Alumno')
-    print('|#| ( 6 ) -----> ')
-    print('|#| ( 7 ) -----> ')
+    print('|#| ( 6 ) -----> Mostrar Aprobados')
+    print('|#| ( 7 ) -----> Mostrar Desprobados')
     print('|#| ( 0 ) -----> Salir')
     
     opcion = input('|#| OPCION ------------: ')
@@ -313,15 +434,15 @@ while True:
             case "2":
                 cargar_notas()
             case "3":
-                listar_Alumnos()
+                listar_alumnos()
             case "4": 
                 calcular_promedios()
             case "5":
                 buscar_alumno()
             case "6":
-                print('Mostrar Aprobados')
+                alumnos_aprobados()
             case "7":
-                print('Mostrar Desprobados')
+                alumnos_desaprobados()
             case "0": 
                 print('|#| SALIENDO.....')
                 break
