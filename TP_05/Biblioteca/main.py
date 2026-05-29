@@ -5,29 +5,33 @@ def limpiar_consola():
 #lo anterior se realiza para poder limpiar la consola
 
 
+libro = {}
+
 libros = [
     {
         "codigo": 0,
         "titulo": "harry potter",
         "autor": "jk rowling",
-        "categoria": "redes",
+        "categoria": "Redes",
         "stock": "18",
      },
      {
         "codigo": 1,
         "titulo": "SQlite",
         "autor": "pepito",
-        "categoria": "redes",
+        "categoria": "Programación",
         "stock": "18",
      },
      {
         "codigo": 2,
         "titulo": "prueba",
         "autor": "pepito",
-        "categoria": "redes",
-        "stock": "18",
+        "categoria": "Redes",
+        "stock": "1",
      },
 ]
+
+prestamo = {}
 
 prestamos = [
     {
@@ -59,59 +63,173 @@ prestamos = [
 categorias = ("Programación", "Base de Datos", "Redes", "Electronica")
 
 
+
 def agregar_libro():
     print('-------|###| BIBLIOTECA |###|-------')
     print('-------|# Agregar un libro #|-------')
-    codigo = len(libros)
-    titulo = input('Titulo: ').lower()
-    autor = input('Autor: ').lower()
+    libro['codigo'] = len(libros)
+    libro['titulo'] = input('Titulo: ').lower()
+    libro['autor'] = input('Autor: ').lower()
     print('Categorias: ')
     for _ in range(len(categorias)):
             print(f"-({_}): {categorias[_]}")
-    categoria = categorias[int((input('categoria: ')))]
-    stock = int(input('cantidad de existencias: '))
+    libro['categoria'] = categorias[int((input('categoria: ')))]
+    libro['stock'] = int(input('cantidad de existencias: '))
 
-
-    libro = {
-        "codigo": codigo,
-        "titulo": titulo,
-        "autor": autor,
-        "categoria": categoria,
-        "stock": stock
-    }
-
+    for l in libros:
+       if l['titulo'].lower() != libro['titulo'].lower():
+            print('Este libro ya se registro en el sistema!')
+            input('Precione cualquier tecla para continuar...')
+            return
+           
     libros.append(libro)
     input('Precione cualquier tecla para continuar...')
 
 
 def mostrar_libros():
-    print('-------|###| BIBLIOTECA |###|-------')
-    print('-----|# Lista de Existencias #|-------')
-    for libro in libros:
-        
-        print(f'--|#Codigo: {libro['codigo']}')
-        print(f'#Titulo: {libro['titulo']}')
-        print(f'#Autor: {libro['autor']}')
-        print(f'#Categoria: {libro['categoria']}')
-        print(f'#Stock: {libro['stock']}')
-    input('Precione cualquier tecla para continuar...')
+    while True:
+        limpiar_consola()
+        print('-------|###| BIBLIOTECA |###|-------')
+        print('----|#  Listas de libros   #|-----')
+        print('-( 1 )- - - -> Listar Todo')
+        print('-( 2 )- - - -> Listar Alfabeticamente')
+        print('-( 3 )- - - -> Listar Con Stock Bajo')
+        #print('-( 4 )- - - -> Buscar por Codigo')
+        print('-( 0 )- - - -> Salir')
+        opcion = input('-( OPCION )- ->: ')
+
+        match opcion:
+            case "1": 
+                print('---|# Lista de Existencias')
+                for libro in libros:
+                    print(f'--|#Codigo: {libro['codigo']}')
+                    print(f'#Titulo: {libro['titulo']}')
+                    print(f'#Autor: {libro['autor']}')
+                    print(f'#Categoria: {libro['categoria']}')
+                    print(f'#Stock: {libro['stock']}')
+                input('Precione cualquier tecla para continuar...')
+            case "2": 
+
+                print('-------|###| BIBLIOTECA |###|-------')
+                print('---|# Listado Alfabeticamente')
+
+                libros_ordenados = sorted(libros, key=lambda lib: lib['titulo'].lower()) #key es el criterio que va a usar para ordenar, en este caso se usa el titulo del libro ("lambda" es una funcion INLINE)
+
+                for libro in libros_ordenados:
+
+                    print(f'--|#Codigo: {libro['codigo']}')
+                    print(f'#Titulo: {libro['titulo']}')
+                    print(f'#Autor: {libro['autor']}')
+                    print(f'#Categoria: {libro['categoria']}')
+                    print(f'#Stock: {libro['stock']}')
+                input('Precione cualquier tecla para continuar...')
+            case "3": 
+                print('---|# Lista de bajo stock')
+                for libro in libros:
+                    if int(libro['stock']) <= 2:
+                        print(f'--|#Codigo: {libro['codigo']}')
+                        print(f'#Titulo: {libro['titulo']}')
+                        print(f'#Autor: {libro['autor']}')
+                        print(f'#Categoria: {libro['categoria']}')
+                        print(f'#Stock: {libro['stock']} ¡STOCK BAJO!')
+                input('Precione cualquier tecla para continuar...')
+            case "0": 
+                print('|#| SALIENDO.....')
+                break
+            case _:
+                print('|#|*** INGRESE UNA OPCION VALIDA ***|#|')
+
+
+
+
+
+    
 
 
 def buscar_libro():
-    print('-------|###| BIBLIOTECA |###|-------')
-    print('-------|#  Buscar libros   #|-------')
-    print('ingrese el titulo del libro')
-    tituloLibro = input('Titulo:  ').lower()
-    
-    for libro in libros:
-        if libro.get('titulo') == tituloLibro:
-            print(f'--|#Codigo: {libro.get('codigo')}')
-            print(f'#Titulo: {libro.get('titulo')}')
-            print(f'#Autor: {libro.get('autor')}')
-            print(f'#Categoria: {libro.get('categoria')}')
-            print(f'#Stock: {libro.get('stock')}')
-        
-    input('Precione cualquier tecla para continuar...')
+    while True:
+        limpiar_consola()
+        print('-------|###| BIBLIOTECA |###|-------')
+        print('----|#  Buscador de libros   #|-----')
+        print('-( 1 )- - - -> Buscar por Titulo')
+        print('-( 2 )- - - -> Buscar por Autor')
+        print('-( 3 )- - - -> Buscar por Categoria')
+        print('-( 4 )- - - -> Buscar por Codigo')
+        print('-( 0 )- - - -> Salir')
+        opcion = input('-( OPCION )- ->: ')
+        limpiar_consola()
+        match opcion:
+            case "1": 
+                print('ingrese el titulo del libro')
+                tituloLibro = input('Titulo:  ').lower()
+                bandera = False                
+                for libro in libros:
+                    if libro.get('titulo') == tituloLibro:
+                        print(f'--|#Codigo: {libro.get('codigo')}')
+                        print(f'#Titulo: {libro.get('titulo')}')
+                        print(f'#Autor: {libro.get('autor')}')
+                        print(f'#Categoria: {libro.get('categoria')}')
+                        print(f'#Stock: {libro.get('stock')}')
+                        bandera = True
+                if bandera is False:
+                    print('No se encontro el libro '+tituloLibro)
+            case "2": 
+                print('ingrese el Autor del libro')
+                autor = input('Autor:  ').lower()
+                bandera = False                
+                for libro in libros:
+                    if libro.get('autor') == autor:
+                        print(f'--|#Codigo: {libro.get('codigo')}')
+                        print(f'#Titulo: {libro.get('titulo')}')
+                        print(f'#Autor: {libro.get('autor')}')
+                        print(f'#Categoria: {libro.get('categoria')}')
+                        print(f'#Stock: {libro.get('stock')}')
+                        bandera = True
+                if bandera is False:
+                    print('No se encontro el libro del autor ' + autor)
+            case "3": 
+                
+                print('ingrese la categoria a buscar: ')
+                for _ in range(len(categorias)):
+                    print(f"-({_}): {categorias[_]}")
+                categ = categorias[int((input('Categoria: ')))]
+                bandera = False                
+                limpiar_consola()
+                print('Categoria: ' + categ)
+                for libro in libros:
+                    if libro.get('categoria') == categ:
+                        print(f'--|#Codigo: {libro.get('codigo')}')
+                        print(f'#Titulo: {libro.get('titulo')}')
+                        print(f'#Autor: {libro.get('autor')}')
+                        print(f'#Categoria: {libro.get('categoria')}')
+                        print(f'#Stock: {libro.get('stock')}')
+                        bandera = True
+                if bandera is False:
+                    print('No se encontraron libros en la categoria ' + categ)
+            case "4": 
+                print('ingrese el Codigo del libro')
+                cod = input('Codigo:  ').lower()
+                bandera = False                
+                for libro in libros:
+                    if libro.get('codigo') == int(cod):
+                        print(f'--|#Codigo: {libro.get('codigo')}')
+                        print(f'#Titulo: {libro.get('titulo')}')
+                        print(f'#Autor: {libro.get('autor')}')
+                        print(f'#Categoria: {libro.get('categoria')}')
+                        print(f'#Stock: {libro.get('stock')}')
+                        bandera = True
+                if bandera is False:
+                    print('No se encontro el libro con el codigo: ' + autor)
+            case "0": 
+                print('|#| SALIENDO.....')
+                break
+            case _:
+                print('|#|*** INGRESE UNA OPCION VALIDA ***|#|')
+
+        input('Precione cualquier tecla para continuar...')
+        print('-------|###| BIBLIOTECA |###|-------')
+        print('-------|#  Buscar libros   #|-------')
+
     
     
 def prestar_libro():
@@ -129,31 +247,23 @@ def prestar_libro():
                 print(f'#Autor: {libro.get('autor')}')
                 print(f'#Categoria: {libro.get('categoria')}')
                 print(f'#Stock: {libro.get('stock')}')
+
+                if libro.get('stock') > 0:
+                    confirmar = input('Confirmar este libro? (S/N):')
+                    if confirmar.lower() == "s":
+                        prestamo['prestamoId'] = len(prestamos)
+                        print('se confirmo')
+                        prestamo['nombre'] = input('Nombre completo: ').lower()
+                        prestamo['fechaActual'] = input('Fecha Actual (dd-mm-aaaa): ')
+                        prestamo['fechaEntrega'] = ""
+                        prestamo['codigoLibro'] = int(libro.get('codigo'))
+                        libro['stock'] = int(libro.get('stock')) - 1
+                        prestamo['entregado'] = False
+                        prestamos.append(prestamo)
+                        break
+                else:
+                    print('|-- Libro Sin Stock!!!!')
                 
-                if libro['stock'] <= 0:
-                    print('Libro sin Stock')
-                    break
-                    
-                
-                confirmar = input('Confirmar este libro? (S/N):')
-                if confirmar.lower() == "s":
-                    idprestamo = len(prestamos)
-                    print('se confirmo')
-                    nombre = input('Nombre completo: ').lower()
-                    fechaActual = input('Fecha Actual (dd-mm-aaaa): ')
-                    codigoLibro = int(libro.get('codigo'))
-                    libro['stock'] = int(libro.get('stock')) - 1
-                    prestamo = {
-                        "prestamoId": idprestamo,
-                        "nombre": nombre,
-                        "fechaActual": fechaActual,
-                        "fechaEntrega": "",
-                        "codigoLibro": codigoLibro,
-                        "entregado": False
-                    }
-                    
-                    prestamos.append(prestamo)
-                    break
             else:
                 print('No se encontro el libro')
     input('Precione cualquier tecla para continuar...')
