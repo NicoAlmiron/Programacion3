@@ -123,11 +123,17 @@ def prestar_libro():
             break
         for libro in libros:
             if libro.get('titulo') == libroAPrestar:
+                
                 print(f'--|#Codigo: {libro.get('codigo')}')
                 print(f'#Titulo: {libro.get('titulo')}')
                 print(f'#Autor: {libro.get('autor')}')
                 print(f'#Categoria: {libro.get('categoria')}')
                 print(f'#Stock: {libro.get('stock')}')
+                
+                if libro['stock'] <= 0:
+                    print('Libro sin Stock')
+                    break
+                    
                 
                 confirmar = input('Confirmar este libro? (S/N):')
                 if confirmar.lower() == "s":

@@ -397,7 +397,7 @@ def alumnos_desaprobados():
                                 bandera.append(True)
                             else:
                                 bandera.append(False)
-                if True in bandera:
+                if True in bandera: # si existe algun valor verdadero en la lista, muestra la cadena
                     print(cadena) 
                 else:
                     print('| No se contro notas desaprobadas') 
