@@ -139,13 +139,6 @@ def mostrar_libros():
             case _:
                 print('|#|*** INGRESE UNA OPCION VALIDA ***|#|')
 
-
-
-
-
-    
-
-
 def buscar_libro():
     while True:
         limpiar_consola()
@@ -239,8 +232,9 @@ def prestar_libro():
         libroAPrestar = input('--#Titulo del Libro (para salir digitar "Salir"): ')
         if libroAPrestar.lower() == 'salir':
             break
+        bandera = False
         for libro in libros:
-            if libro.get('titulo') == libroAPrestar:
+            if libro.get('titulo').lower() == libroAPrestar.lower():
                 
                 print(f'--|#Codigo: {libro.get('codigo')}')
                 print(f'#Titulo: {libro.get('titulo')}')
@@ -248,7 +242,7 @@ def prestar_libro():
                 print(f'#Categoria: {libro.get('categoria')}')
                 print(f'#Stock: {libro.get('stock')}')
 
-                if libro.get('stock') > 0:
+                if int(libro.get('stock')) > 0:
                     confirmar = input('Confirmar este libro? (S/N):')
                     if confirmar.lower() == "s":
                         prestamo['prestamoId'] = len(prestamos)
@@ -260,17 +254,23 @@ def prestar_libro():
                         libro['stock'] = int(libro.get('stock')) - 1
                         prestamo['entregado'] = False
                         prestamos.append(prestamo)
+                        bandera = True
                         break
                 else:
                     print('|-- Libro Sin Stock!!!!')
                 
-            else:
-                print('No se encontro el libro')
+        if bandera is False:
+            print('No se encontro el libro...')
     input('Precione cualquier tecla para continuar...')
 
 def mostrar_prestamos():
     print('-------|###| BIBLIOTECA |###|-------')
     print('-----|# Lista de Prestamos #|-------')
+    if len(prestamos) <= 0:
+        print('|#-- No hay prestamos en el sistema')
+        input('Precione cualquier tecla para continuar...')
+        return
+    
     for prestamo in prestamos:
         print(f'--|#Id Prestamo: {prestamo['prestamoId']}')
         print(f'#Nombre: {prestamo['nombre']}')
@@ -289,6 +289,11 @@ def mostrar_prestamos():
 def devolver_prestamo():
     print('-------|###| BIBLIOTECA |###|-------')
     print('-------|#Devolver Prestamo#|-------')
+    if len(prestamos) <= 0:
+        print('|#-- No hay prestamos en el sistema')
+        input('Precione cualquier tecla para continuar...')
+        return
+    
     print('ingrese el nombre de la persona y el titulo del libro')
     nombre = input('#Nombre: ').lower()
     titulo = input('#Titulo: ').lower()
@@ -296,7 +301,6 @@ def devolver_prestamo():
     for prestamo in prestamos:
         if prestamo.get('nombre') == nombre:
             for libro in libros:
-                
                 if libro.get('titulo') == titulo:
                     codigo = int(libro.get('codigo'))
             if prestamo.get('codigoLibro') == codigo:
@@ -333,6 +337,37 @@ def eliminar_libro():
             print('Se elimino correctamente!')
     input('Precione cualquier tecla para continuar...')
     
+def estadisticas():
+    print('-------|###| BIBLIOTECA |###|-------')
+    print('-------|#   Estadisticas   #|-------')
+    cantidad_libros_general = 0
+    cantidad_libros_stock = 0
+    cantidad_libros_prestados = len(prestamos)
+    cantidad_libros_entregados = 0
+    cantidad_libros_sin_entregar = 0
+    for libro in libros:
+        cantidad_libros_stock += int(libro['stock'])
+    for prestamo in prestamos:
+        for clave, valor in prestamo.items():
+            if clave == 'entregado' and valor is True:
+                cantidad_libros_entregados += 1
+            elif clave == 'entregado' and valor is False:
+                cantidad_libros_sin_entregar += 1
+    
+    libros_ordenados = sorted(libros, key=lambda lib: int(lib['stock']), reverse=True)
+    
+    libro_mayor_stock = libros_ordenados[0]['titulo']
+    
+    cantidad_libros_general = cantidad_libros_stock + cantidad_libros_prestados
+    
+    print(f'|#-- Cantidad de libros: {cantidad_libros_general}')    
+    print(f'|#-- Cantidad de libros en stock: {cantidad_libros_stock}')
+    print(f'|#-- Cantidad de libros prestamos: {cantidad_libros_prestados}')
+    print(f'|#-- Libro con mas stock: {libro_mayor_stock}')
+    print(f'|###--- Prestamos: {cantidad_libros_prestados}')
+    print(f'|#-- Cantidad de libros devueltos: {cantidad_libros_entregados}')
+    print(f'|#-- Cantidad de libros sin devolver: {cantidad_libros_sin_entregar}')
+    input('Precione cualquier tecla para continuar...')
 
 while True:
     limpiar_consola()
@@ -344,26 +379,29 @@ while True:
     print('-( 5 )- - - -> Listar Prestamos')
     print('-( 6 )- - - -> Devolver Prestamo')
     print('-( 7 )- - - -> Eliminar Libro')
+    print('-( 8 )- - - -> Estadisticas')
     print('-( 0 )- - - -> Salir')
-    opcion = int(input('-( OPCION )- ->: '))
+    opcion = input('-( OPCION )- ->: ')
 
     limpiar_consola()
 
-    if opcion == 1:
+    if opcion == "1":
         agregar_libro()
-    elif opcion == 2:
+    elif opcion == "2":
         mostrar_libros()
-    elif opcion == 3:
+    elif opcion == "3":
         buscar_libro()
-    elif opcion == 4:
+    elif opcion == "4":
         prestar_libro()
-    elif opcion == 5:
+    elif opcion == "5":
         mostrar_prestamos()
-    elif opcion == 6:
+    elif opcion == "6":
         devolver_prestamo()
-    elif opcion == 7:
+    elif opcion == "7":
         eliminar_libro()
-    elif opcion == 0:
+    elif opcion == "8":
+        estadisticas()
+    elif opcion == "0":
         break
     else:
         print('-( X )- - -> opcion incorrecta')
