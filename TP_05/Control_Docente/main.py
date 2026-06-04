@@ -84,9 +84,21 @@ def cargar_notas():
     for alumno in alumnos: #busco en la lista de alumnos
         for clave, valor in alumno.items(): # aqui busco dato por dato de cada alumno
             if clave == 'dni' and dni == valor: #cyuando encuentro la clave dni comparo con el dni ingresado el valor de esa clave
+                mat = []
+                if len(alumno['notas']) > 0:
+                      
+                    notas = alumno['notas'] 
+                    for clave in alumno['notas'].keys():
+                        if clave == materias[0]:
+                            mat.append(1)
+                        elif clave == materias[1]:
+                            mat.append(2)
+                        elif clave == materias[2]:
+                            mat.append(3)
+                        elif clave == materias[3]:
+                            mat.append(4)
                 print('|#|-- Ingrese las materias')
                 i = 0
-                mat = []
                 while i < 5:
                     limpiar_consola()
                     cadena1 = '|1| Programacion - |2| Matematica'
@@ -117,18 +129,30 @@ def cargar_notas():
                     print('    |0| Guardar y Salir')
 
                     op = input('\n|#|--: ')
+
                     
                     # Switch de decicion para elegir la opcion
                     match op:
                         case '1': # en caso de elegir programacion
+
                             nota = []
                             if 1 in mat:
                                 print(f'|#| Ya se ingresaron notas!')
-                                # print(f'|#| desea ingresar otra (S/N)?:  ')
-                                # n = 
-                                # nota[n] = int(input(f'|#| {n}º Nota:'))
-
-                                # notas.update({'Programacion': nota})
+                                print(f'|#| desea sobrescribir las notas (S/N)?:  ')
+                                op = input('Confirmacion: ')
+                                if op.lower() == 'n':
+                                    break
+                                print(f'|#| Ingrese las notas. Precione N para salir')
+                                n = 1
+                                while n < 4: # recorro 3 posisciones indicando que la primera pertenece al 1er parcial, la segunda al segundo y la ultima al final
+                                    n_provisoria = input(f'| {n}º Nota: ')
+                                    if n_provisoria != "N" and n_provisoria != "n": # identifico la bandera de salida
+                                        nota.append(int(n_provisoria)) # convierto a entero, igualmente fallara si no se coloca un try catch por fallo de convercion si se ingresa un string
+                                        n += 1
+                                    else: 
+                                        break
+                                notas.update({'Programacion': nota})
+                                print(f'|#| Las notas se sobrescribieron correctamente')
                             else:
                                 print(f'|#| Programacion')
                                 print(f'|#| Ingrese las notas. Precione N para salir')
@@ -147,6 +171,21 @@ def cargar_notas():
                             nota = []
                             if 2 in mat:
                                 print(f'|#| Ya se ingresaron notas!')
+                                print(f'|#| desea sobrescribir las notas (S/N)?:  ')
+                                op = input('Confirmacion: ')
+                                if op.lower() == 'n':
+                                    break
+                                print(f'|#| Ingrese las notas. Precione N para salir')
+                                n = 1
+                                while n < 4: # recorro 3 posisciones indicando que la primera pertenece al 1er parcial, la segunda al segundo y la ultima al final
+                                    n_provisoria = input(f'| {n}º Nota: ')
+                                    if n_provisoria != "N" and n_provisoria != "n": # identifico la bandera de salida
+                                        nota.append(int(n_provisoria)) # convierto a entero, igualmente fallara si no se coloca un try catch por fallo de convercion si se ingresa un string
+                                        n += 1
+                                    else: 
+                                        break
+                                notas.update({'Matematica': nota})
+                                print(f'|#| Las notas se sobrescribieron correctamente')
                             else:
                                 print(f'|#| Matematicas')
                                 print(f'|#| Ingrese las notas. Precione N para salir')
@@ -165,6 +204,21 @@ def cargar_notas():
                             nota = []
                             if 3 in mat:
                                 print(f'|#| Ya se ingresaron notas!')
+                                print(f'|#| desea sobrescribir las notas (S/N)?:  ')
+                                op = input('Confirmacion: ')
+                                if op.lower() == 'n':
+                                    break
+                                print(f'|#| Ingrese las notas. Precione N para salir')
+                                n = 1
+                                while n < 4: # recorro 3 posisciones indicando que la primera pertenece al 1er parcial, la segunda al segundo y la ultima al final
+                                    n_provisoria = input(f'| {n}º Nota: ')
+                                    if n_provisoria != "N" and n_provisoria != "n": # identifico la bandera de salida
+                                        nota.append(int(n_provisoria)) # convierto a entero, igualmente fallara si no se coloca un try catch por fallo de convercion si se ingresa un string
+                                        n += 1
+                                    else: 
+                                        break
+                                notas.update({'Ingles': nota})
+                                print(f'|#| Las notas se sobrescribieron correctamente')
                             else:
                                 print(f'|#| Ingles')
                                 print(f'|#| Ingrese las notas. Precione N para salir')
@@ -183,6 +237,21 @@ def cargar_notas():
                             nota = []
                             if 4 in mat:
                                 print(f'|#| Ya se ingresaron notas!')
+                                print(f'|#| desea sobrescribir las notas (S/N)?:  ')
+                                op = input('Confirmacion: ')
+                                if op.lower() == 'n':
+                                    break
+                                print(f'|#| Ingrese las notas. Precione N para salir')
+                                n = 1
+                                while n < 4: # recorro 3 posisciones indicando que la primera pertenece al 1er parcial, la segunda al segundo y la ultima al final
+                                    n_provisoria = input(f'| {n}º Nota: ')
+                                    if n_provisoria != "N" and n_provisoria != "n": # identifico la bandera de salida
+                                        nota.append(int(n_provisoria)) # convierto a entero, igualmente fallara si no se coloca un try catch por fallo de convercion si se ingresa un string
+                                        n += 1
+                                    else: 
+                                        break
+                                notas.update({'Base de datos': nota})
+                                print(f'|#| Las notas se sobrescribieron correctamente')
                             else:
                                 print(f'|#| Base de Datos')
                                 print(f'|#| Ingrese las notas. Precione N para salir')
@@ -217,11 +286,13 @@ def calcular_promedios():
         print('|#| Calculadora de promedios |#|')
         print('|#| ( 1 ) -----> Listar alumnos con promedios')
         print('|#| ( 2 ) -----> Promedio de un alumno')
+        print('|#| ( 3 ) -----> Lista con promedios generales')
+        print('|#| ( 4 ) -----> Promedio mas alto y bajo')
         print('|#| ( 0 ) -----> Salir')
         
         opcion = input('|#| OPCION ------------: ')
 
-
+        limpiar_consola()
         match opcion:
             case "1": 
                 print('|#| Listado de Promedios |#|')
@@ -247,6 +318,73 @@ def calcular_promedios():
                             for key, value in alumno['notas'].items(): # aqui se recorre el diccionario "notas"
                                 prom = sum(value) / len(value)
                                 print(f'|#|\t  {key}: {prom}')
+            case "3":
+                print('|#| Listado de Promedios |#|')
+                for alumno in alumnos: # Se recorre la lista de alumnos
+                    promGeneral = 0
+                    print(f'|#|Alumno Nroº {alumno.get('idAlumno')} ------------------')
+                    print(f'|#|\t-Nombre: {alumno.get('nombre')}')
+                    print(f'|#|\t-DNI: {alumno.get('dni')}')
+                    tot = 0
+                    for value in alumno['notas'].values(): # aqui se recorre el diccionario "notas"
+                        tot += sum(value) / len(value)
+                    
+                    promGeneral = tot / len(alumno['notas'])
+                    print(f'|#|\t-Promedio: {promGeneral}') 
+            case "4": 
+                print('|#| Promedio Mas Alto y Mas Bajo |#|')
+
+                # Promedio mas bajo
+                print('|# Mas Bajo ----------------')
+                promMasBajo = sorted(alumnos, key=lambda alum:  (   #utilizo la funcion sorted para crear una lista nueva ordenada
+                                    sum(   #realizo la sumatoria de notas del alumno
+                                        nota   # parametro que se sumara en la funcion sumatoria
+                                        for materia in alum['notas'].values()
+                                           for nota in materia
+                                        )                                     
+                                    ) 
+                                    / 
+                                    sum(
+                                        len(materia) #pa
+                                        for materia in alum['notas'].values()
+                                    ) 
+                                )   
+                print(f'|#|Alumno Nroº {promMasBajo[0].get('idAlumno')} ------------------')
+                print(f'|#|\t-Nombre: {promMasBajo[0].get('nombre')}')
+                print(f'|#|\t-DNI: {promMasBajo[0].get('dni')}')
+                tot = 0
+                for value in promMasBajo[0]['notas'].values(): # aqui se recorre el diccionario "notas"
+                    tot += sum(value) / len(value)
+                promGeneral = tot / len(promMasBajo[0]['notas'])
+                print(f'|#|\t-Promedio: {promGeneral}')
+
+
+                # Promedio mas alto
+                print('|# Mas Alto ----------------')
+                promMasAlto = sorted(alumnos, key=lambda alum:  (   #utilizo la funcion sorted para crear una lista nueva ordenada
+                                    sum(   #realizo la sumatoria de notas del alumno
+                                        nota   # parametro que se sumara en la funcion sumatoria
+                                        for materia in alum['notas'].values()
+                                           for nota in materia
+                                        )                                     
+                                    ) 
+                                    / 
+                                    sum(
+                                        len(materia) #pa
+                                        for materia in alum['notas'].values()
+                                    ) 
+                                    , reverse=True
+                                )           
+                promGeneral = 0
+                print(f'|#|Alumno Nroº {promMasAlto[0].get('idAlumno')} ------------------')
+                print(f'|#|\t-Nombre: {promMasAlto[0].get('nombre')}')
+                print(f'|#|\t-DNI: {promMasAlto[0].get('dni')}')
+                tot = 0
+                for value in promMasAlto[0]['notas'].values(): # aqui se recorre el diccionario "notas"
+                    tot += sum(value) / len(value)
+                promGeneral = tot / len(promMasAlto[0]['notas'])
+                print(f'|#|\t-Promedio: {promGeneral}')
+
             case "0": 
                 print('|#| SALIENDO.....')
                 break
@@ -261,9 +399,11 @@ def buscar_alumno():
         print('|#| Buscador de Alumnos |#|')
         print('|#| ( 1 ) --> Por DNI')
         print('|#| ( 2 ) --> Por Nombre')
+        print('|#| ( 3 ) --> Por Materia')
         print('|#| ( 0 ) --> Salir')
         
         opcion = input('|#| OPCION ------------: ')
+        limpiar_consola()
         match opcion:
             case "1":
                 print('|#-- Ingrese el DNI del alumno')
@@ -291,6 +431,30 @@ def buscar_alumno():
                             for key, value in alumno['notas'].items(): # aqui se recorre el diccionario "notas"
                                 prom = sum(value) / len(value)
                                 print(f'|#|\t  {key}: {prom}')
+            case "3":
+                print('|#-- Ingrese la Materia')
+                
+                print('|#| (1) - Programacion | (2) - Matematica')
+                print('|#| (3) - Ingles       | (4) - Base de Datos')
+                op =  input('|# Materia: ')
+                limpiar_consola()
+                if type(op) != int:
+                    print('Ingrese un numero')
+
+                materia = materias[int(op )-1]
+                print(f'|#-- {materia} ----------')
+                for alumno in alumnos: # Se recorre la lista de alumnos
+                    for key in alumno['notas'].keys(): # aqui se recorre el diccionario "notas"
+                            if key.lower() == materia.lower():
+                                print(f'|#|Alumno Nroº {alumno.get('idAlumno')} ------------------')
+                                print(f'|#|\t-Nombre: {alumno.get('nombre')}')
+                                print(f'|#|\t-DNI: {alumno.get('dni')}')
+                                print('|#|\t-Promedios:') 
+                                for key, value in alumno['notas'].items():
+                                    if key.lower() == materia.lower():
+                                        prom = sum(value) / len(value)
+                                        print(f'|#|\t  {key}: {prom}')
+
             case "0": 
                 print('|#| SALIENDO.....')
                 break
@@ -409,6 +573,8 @@ def alumnos_desaprobados():
 
         input('|#| Pulse cualquier tecla para continuar....')
 
+
+    
 
 # Se inicia un bucle que contendra el menu interactivo
 while True: 
