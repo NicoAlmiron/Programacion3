@@ -97,6 +97,9 @@ def cargar_notas():
                             mat.append(3)
                         elif clave == materias[3]:
                             mat.append(4)
+                else:
+                    notas = {}
+
                 print('|#|-- Ingrese las materias')
                 i = 0
                 while i < 5:
