@@ -1,0 +1,4 @@
+1     |cosme fulanito                |14-06-2026|          |1     |0|
+2     |nicolas almiron               |15-06-2026|          |3     |0|
+3     |cosme fulanito                |22-06-2026|          |2     |0|
+4     |juan perez                    |20-06-2026|          |3     |0|

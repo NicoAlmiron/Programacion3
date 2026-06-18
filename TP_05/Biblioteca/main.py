@@ -1,73 +1,225 @@
 import os
+import os.path
 
 def limpiar_consola():
     os.system('cls' if os.name == 'nt' else 'clear')
 #lo anterior se realiza para poder limpiar la consola
 
 
+# Diccionarios De Datos
+# Libro:
+#codigo - Entero - 6 bits
+#titulo - Cadena - 30 bits
+#autor - Cadena - 30 bits
+#categoria - Cadena - 20 bits
+#stock - Entero - 4 bits
+#REGISTRO: 
+#1     |harry potter                  |jk rowling                    |Redes               |20  |
+
+
+# Prestamo:
+#prestamoId - Entero - 6 bits
+#nombre - Cadena - 30 bits
+#fechaActual - Cadena - 10 bits
+#fechaEntrega - Cadena - 10 bits
+#codigoLibro - Entero - 6 bits
+#entregado - Entero - 1 bits
+#REGISTRO:
+#1     |cosme fulanito                |14-06-2026|          |1     |0|
+
+
+
+
+
+
+
+
 libro = {}
 
 libros = [
-    {
-        "codigo": 0,
-        "titulo": "harry potter",
-        "autor": "jk rowling",
-        "categoria": "Redes",
-        "stock": "18",
-     },
-     {
-        "codigo": 1,
-        "titulo": "SQlite",
-        "autor": "pepito",
-        "categoria": "Programación",
-        "stock": "18",
-     },
-     {
-        "codigo": 2,
-        "titulo": "prueba",
-        "autor": "pepito",
-        "categoria": "Redes",
-        "stock": "1",
-     },
+    # {
+    #     "codigo": 0,
+    #     "titulo": "harry potter",
+    #     "autor": "jk rowling",
+    #     "categoria": "Redes",
+    #     "stock": "18",
+    #  },
+    #  {
+    #     "codigo": 1,
+    #     "titulo": "SQlite",
+    #     "autor": "pepito",
+    #     "categoria": "Programación",
+    #     "stock": "18",
+    #  },
+    #  {
+    #     "codigo": 2,
+    #     "titulo": "prueba",
+    #     "autor": "pepito",
+    #     "categoria": "Redes",
+    #     "stock": "1",
+    #  },
 ]
+
+# Archivos
+
+# ------- Leer archivos
+def leer_file_libros():
+
+
+    registros = []
+
+    with open('libros.txt', 'r') as file:
+        registros = file.readlines()
+        if len(registros) <= 0:
+            return
+        for reg in registros:
+            libro ={
+                "codigo": int(reg[0:6]),
+                "titulo": reg[7:36].strip('  '),
+                "autor": reg[38:67].strip('  '),
+                "categoria": reg[69:88].strip('  '),
+                "stock": int(reg[90:93]),
+                }
+            libros.append(libro)
+
+    
+
+# ------- Escribir archivos
+def escribir_file_libro(libro):
+    with open('libros.txt', 'a') as arch_lib:
+        reg_libro = ""
+        reg_libro += f"{libro['codigo']}{(" " * ( 6 - len(str(libro['codigo'])) ) )}|" # codigo
+        reg_libro += f"{libro['titulo']}{(" " * ( 30 - len(libro['titulo']) ) )}|" # titulo
+        reg_libro += f"{libro['autor']}{(" " * ( 30 - len(libro['autor']) ) )}|" # autor
+        reg_libro += f"{libro['categoria']}{(" " * ( 20 - len(libro['categoria']) ) )}|" # categoria
+        reg_libro += f"{libro['stock']}{(" " * ( 4 - len(str(libro['stock'])) ) )}|\n" # stock
+        arch_lib.write(reg_libro)
+
+
+def buscar_libro_archivo(id_libro):
+
+    with open('libros.txt', 'r') as file:
+        registros = file.readlines()
+        if len(registros) <= 0:
+            return
+        for reg in registros:
+            libro ={
+                "codigo": int(reg[0:6]),
+                "titulo": reg[7:36].strip('  '),
+                "autor": reg[38:67].strip('  '),
+                "categoria": reg[69:88].strip('  '),
+                "stock": int(reg[90:93]),
+                }
+            if libro['codigo'] == id_libro:
+                return libro
+
+
+def reescribir_archivo():
+    with open('libros.txt', 'w') as arch_lib:
+        for libro in libros:
+            reg_libro = ""
+            reg_libro += f"{libro['codigo']}{(" " * ( 6 - len(str(libro['codigo'])) ) )}|" # codigo
+            reg_libro += f"{libro['titulo']}{(" " * ( 30 - len(libro['titulo']) ) )}|" # titulo
+            reg_libro += f"{libro['autor']}{(" " * ( 30 - len(libro['autor']) ) )}|" # autor
+            reg_libro += f"{libro['categoria']}{(" " * ( 20 - len(libro['categoria']) ) )}|" # categoria
+            reg_libro += f"{libro['stock']}{(" " * ( 4 - len(str(libro['stock'])) ) )}|\n" # stock
+            arch_lib.write(reg_libro)
+
+
+
 
 prestamo = {}
 
 prestamos = [
-    {
-        "prestamoId": 0,
-        "nombre": "Nicolas almiron",
-        "fechaActual": "22-05-2026",
-        "fechaEntrega": "",
-        "codigoLibro": 0,
-        "entregado": False,
-    },
-    {
-        "prestamoId": 1,
-        "nombre": "Cosme fulanito",
-        "fechaActual": "20-05-2026",
-        "fechaEntrega": "",
-        "codigoLibro": 0,
-        "entregado": False,
-    },
-    {
-        "prestamoId": 2,
-        "nombre": "pepito",
-        "fechaActual": "23-05-2026",
-        "fechaEntrega": "",
-        "codigoLibro": 2,
-        "entregado": False,
-    }
+    # {
+    #     "prestamoId": 0,
+    #     "nombre": "Nicolas almiron",
+    #     "fechaActual": "22-05-2026",
+    #     "fechaEntrega": "",
+    #     "codigoLibro": 0,
+    #     "entregado": False,
+    # },
+    # {
+    #     "prestamoId": 1,
+    #     "nombre": "Cosme fulanito",
+    #     "fechaActual": "20-05-2026",
+    #     "fechaEntrega": "",
+    #     "codigoLibro": 0,
+    #     "entregado": False,
+    # },
+    # {
+    #     "prestamoId": 2,
+    #     "nombre": "pepito",
+    #     "fechaActual": "23-05-2026",
+    #     "fechaEntrega": "",
+    #     "codigoLibro": 2,
+    #     "entregado": False,
+    # }
 ]
 
-categorias = ("Programación", "Base de Datos", "Redes", "Electronica")
+# Prestamo:
+#prestamoId - Entero - 6 bits
+#nombre - Cadena - 30 bits
+#fechaActual - Cadena - 10 bits
+#fechaEntrega - Cadena - 10 bits
+#codigoLibro - Entero - 6 bits
+#entregado - Entero - 1 bits
+#REGISTRO:
+#1     |cosme fulanito                |14-06-2026|          |1     |0|
+
+
+
+def leer_file_prestamo():
+
+
+    registros = []
+
+    with open('prestamos.txt', 'r') as file:
+        registros = file.readlines()
+        if len(registros) <= 0:
+            return 
+        for reg in registros:
+            prestamo ={
+                "prestamoId": int(reg[0:5]),
+                "nombre": reg[7:36].strip('  '),
+                "fechaActual": reg[38:47].strip('  '),
+                "fechaEntrega": reg[49:58].strip('  '),
+                "codigoLibro": int(reg[60:65]),
+                "entregado": int(reg[67]),
+                }
+            prestamos.append(prestamo)
+
+def escribir_file_prestamo(prestamo):
+    with open('prestamos.txt', 'a') as arch_pres:
+        reg_prestamo = ""
+        reg_prestamo += f"\n{prestamo['prestamoId']}{(" " * ( 6 - len(str(prestamo['prestamoId'])) ) )}|" # codigo
+        reg_prestamo += f"{prestamo['nombre']}{(" " * ( 30 - len(prestamo['nombre']) ) )}|" # titulo
+        reg_prestamo += f"{prestamo['fechaActual']}{(" " * ( 10 - len(prestamo['fechaActual']) ) )}|" # autor
+        reg_prestamo += f"{prestamo['fechaEntrega']}{(" " * ( 10 - len(prestamo['fechaEntrega']) ) )}|" # categoria
+        reg_prestamo += f"{prestamo['codigoLibro']}{(" " * ( 6 - len(str(prestamo['codigoLibro'])) ) )}|" # stock
+        reg_prestamo += f"{int(prestamo['entregado'])}{(" " * ( 1 - len(str(prestamo['entregado'])) ) )}|" # stock
+        arch_pres.write(reg_prestamo)
+
+def devolucion_archivo(pres):
+    with open('prestamos.txt', 'w') as arch_pres:            
+        for prestamo in prestamos:
+            reg_prestamo = ""
+            reg_prestamo += f"\n{prestamo['prestamoId']}{(" " * ( 6 - len(str(prestamo['prestamoId'])) ) )}|" # codigo
+            reg_prestamo += f"{prestamo['nombre']}{(" " * ( 30 - len(prestamo['nombre']) ) )}|" # titulo
+            reg_prestamo += f"{prestamo['fechaActual']}{(" " * ( 10 - len(prestamo['fechaActual']) ) )}|" # autor
+            reg_prestamo += f"{prestamo['fechaEntrega']}{(" " * ( 10 - len(prestamo['fechaEntrega']) ) )}|" # categoria
+            reg_prestamo += f"{prestamo['codigoLibro']}{(" " * ( 6 - len(str(prestamo['codigoLibro'])) ) )}|" # stock
+            reg_prestamo += f"{int(prestamo['entregado'])}{(" " * ( 1 - len(str(prestamo['entregado'])) ) )}|" # stock
+            arch_pres.write(reg_prestamo)
+
+categorias = ("Programacion", "Base de Datos", "Redes", "Electronica")
 
 
 
 def agregar_libro():
     print('-------|###| BIBLIOTECA |###|-------')
     print('-------|# Agregar un libro #|-------')
-    libro['codigo'] = len(libros)
+    libro['codigo'] = len(libros) + 1
     libro['titulo'] = input('Titulo: ').lower()
     libro['autor'] = input('Autor: ').lower()
     print('Categorias: ')
@@ -77,13 +229,16 @@ def agregar_libro():
     libro['stock'] = int(input('cantidad de existencias: '))
 
     for l in libros:
-       if l['titulo'].lower() != libro['titulo'].lower():
+       #print(f"{l['titulo'].lower()} - {libro['titulo']}")
+       if l['titulo'].lower() == libro['titulo'].lower():
             print('Este libro ya se registro en el sistema!')
             input('Precione cualquier tecla para continuar...')
             return
            
     libros.append(libro)
+    escribir_file_libro(libro)
     input('Precione cualquier tecla para continuar...')
+
 
 
 def mostrar_libros():
@@ -245,7 +400,7 @@ def prestar_libro():
                 if int(libro.get('stock')) > 0:
                     confirmar = input('Confirmar este libro? (S/N):')
                     if confirmar.lower() == "s":
-                        prestamo['prestamoId'] = len(prestamos)
+                        prestamo['prestamoId'] = len(prestamos) + 1
                         print('se confirmo')
                         prestamo['nombre'] = input('Nombre completo: ').lower()
                         prestamo['fechaActual'] = input('Fecha Actual (dd-mm-aaaa): ')
@@ -254,6 +409,7 @@ def prestar_libro():
                         libro['stock'] = int(libro.get('stock')) - 1
                         prestamo['entregado'] = False
                         prestamos.append(prestamo)
+                        escribir_file_prestamo(prestamo)
                         bandera = True
                         break
                 else:
@@ -270,13 +426,14 @@ def mostrar_prestamos():
         print('|#-- No hay prestamos en el sistema')
         input('Precione cualquier tecla para continuar...')
         return
-    
     for prestamo in prestamos:
         print(f'--|#Id Prestamo: {prestamo['prestamoId']}')
         print(f'#Nombre: {prestamo['nombre']}')
         print(f'#Fecha Actual: {prestamo['fechaActual']}')
         print(f'#Fecha Entrega: {prestamo['fechaEntrega']}')
-        print(f'#Libro: {libros[prestamo.get('codigoLibro')].get('titulo')}')
+        for libro in libros:
+            if libro['codigo'] == prestamo['codigoLibro']:
+                print(f'#Libro: {libro['titulo']}')
         if prestamo.get('entregado') == False:
             print(f'#Entregado?: *No entregado*')
         elif prestamo.get('entregado') == True:
@@ -317,6 +474,7 @@ def devolver_prestamo():
                 if confirmar.lower() == 's':
                     prestamo['fechaEntrega'] = fechaDeEntrega
                     prestamo['entregado'] = True
+                    devolucion_archivo(prestamo)
                     print('---|#Devolucion Exitosa!')
                     break
                 elif confirmar.lower() == 'n': 
@@ -335,6 +493,7 @@ def eliminar_libro():
         if libro.get('titulo') == titulo:
             libros.remove(libro)
             print('Se elimino correctamente!')
+            reescribir_archivo()
     input('Precione cualquier tecla para continuar...')
     
 def estadisticas():
@@ -369,6 +528,18 @@ def estadisticas():
     print(f'|#-- Cantidad de libros sin devolver: {cantidad_libros_sin_entregar}')
     input('Precione cualquier tecla para continuar...')
 
+
+def leer_archivos():
+    leer_file_libros()
+    leer_file_prestamo()
+
+
+
+
+
+
+
+leer_archivos()
 while True:
     limpiar_consola()
     print('-------|###| BIBLIOTECA |###|-------')
@@ -382,9 +553,7 @@ while True:
     print('-( 8 )- - - -> Estadisticas')
     print('-( 0 )- - - -> Salir')
     opcion = input('-( OPCION )- ->: ')
-
     limpiar_consola()
-
     if opcion == "1":
         agregar_libro()
     elif opcion == "2":
