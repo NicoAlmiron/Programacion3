@@ -1,0 +1,2 @@
+1         |300000.0   |Efectivo     |
+2         |180000.0   |Transferencia|

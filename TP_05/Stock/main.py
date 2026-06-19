@@ -4,27 +4,78 @@ def limpiar_consola():
     os.system('cls' if os.name == 'nt' else 'clear')
 #lo anterior se realiza para poder limpiar la consola
 
+#Diccionarios
+# Productos
+#      "id" - entero - 6 bits
+#  "nombre" - string - 30 bits
+#  "precio" - flotante (99999999.99) - 11 bits
+#   "stock" - entero - 4 bits
+#1     |cosme fulanito               |25000.00   |20  |     
+
+
+producto = {}
+
 
 productos = [
-    {
-        "id": 1,
-        "nombre": "teclado mecanico",
-        "precio": 150000,
-        "stock": 8
-    },
-    {
-        "id": 2,
-        "nombre": "mouse gamer RGB",
-        "precio": 50000,
-        "stock": 9
-    },
-    {
-        "id": 3,
-        "nombre": "prueba",
-        "precio": 90000,
-        "stock": 10
-    }
+    # {
+    #     "id": 1,
+    #     "nombre": "teclado mecanico",
+    #     "precio": 150000,
+    #     "stock": 8
+    # },
+    # {
+    #     "id": 2,
+    #     "nombre": "mouse gamer RGB",
+    #     "precio": 50000,
+    #     "stock": 9
+    # },
+    # {
+    #     "id": 3,
+    #     "nombre": "prueba",
+    #     "precio": 90000,
+    #     "stock": 10
+    # }
 ]
+
+def extraer_productos():
+
+    registros = []
+
+    with open('Productos.txt', 'r', encoding='UTF-8') as file:
+        registros = file.readlines()
+        if len(registros) <= 0:
+            return
+        for reg in registros:
+            producto ={
+                "id": int(reg[0:6]),
+                "nombre": reg[7:36].strip('  '),
+                "precio": float(reg[38:48]),
+                "stock": int(reg[50:53]),
+                }
+            productos.append(producto)
+
+
+def escribir_producto(producto):
+    with open('Productos.txt', 'a', encoding='UTF-8') as arch_prod:
+        reg_prod = ""
+        reg_prod += f"{producto['id']}{(" " * ( 6 - len(str(producto['id'])) ) )}|" # id producto
+        reg_prod += f"{producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}|" # nombre
+        reg_prod += f"{producto['precio']}{(" " * ( 11 - len(str(producto['precio'])) ) )}|" # precio
+        reg_prod += f"{producto['stock']}{(" " * ( 4 - len(str(producto['stock'])) ) )}|\n" # stock
+        arch_prod.write(reg_prod)
+
+
+
+
+def reescribir_productos_archivo():
+    with open('Productos.txt', 'w', encoding='UTF-8') as arch_prod:
+        for producto in productos:
+            reg_prod = ""
+            reg_prod += f"{producto['id']}{(" " * ( 6 - len(str(producto['id'])) ) )}|" # id producto
+            reg_prod += f"{producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}|" # nombre
+            reg_prod += f"{producto['precio']}{(" " * ( 11 - len(str(producto['precio'])) ) )}|" # precio
+            reg_prod += f"{producto['stock']}{(" " * ( 4 - len(str(producto['stock'])) ) )}|\n" # stock
+            arch_prod.write(reg_prod)
 
 
 # ventas = [
@@ -47,43 +98,129 @@ productos = [
 #     },
 # ]
 
+#Diccionarios
+# Venta
+#       "id_venta" - entero - 10 bits
+#  "importe_total" - flotante (999,999,999.9) - 11 bits
+#     "forma_pago" - string - 13 bits
+#1         |500000.0   |Transferencia|
+ 
+# "id_detalle_venta" - entero - 11 bits (se conforma por id_venta mas id_producto por ejemplo el id_detalle_venta seria: '10' + '6' = 106)
+
+# Detalles_Ventas
+#      "id_venta" - entero - 6 bits
+#      "id_producto" - entero - 6 bits
+#         "cantidad" - entero - 3 bits
+#         "subtotal" - flotante (99999999.99) - 11 bits
+#1     |2     |2  |300000.0   |
+
+venta = {}
+
 ventas = [
-    {
-        "id_venta": 1,
-        "detalle_venta": [
-        {
-            'id_producto' : 1,
-            'detalle_prod' : 
-            {
-                'cantidad': 2,
-                'sub_total': 300000       
-            },
-        },
-        {
-            'id_producto' : 2,
-            'detalle_prod' :
-            {
-                'cantidad': 1,
-                'sub_total': 50000                
-            },
-        }],
-        "importe_total": 350000,
-        "forma_pago": 'Efectivo',
-    },
-    {
-        "id_venta": 2,
-        "detalle_venta": [{
-            'id_producto': 1,
-            'detalle_prod':
-            {
-                   'cantidad': 1,
-                   'sub_total': 50  
-            }              
-           }],
-        "importe_total": 50000,
-        "forma_pago": 'Tarjeta'
-    },
+    # {
+    #     "id_venta": 1,
+    #     "detalle_venta": [
+    #     {
+    #         'id_producto' : 1,
+    #         'detalle_prod' : 
+    #         {
+    #             'cantidad': 2,
+    #             'sub_total': 300000       
+    #         },
+    #     },
+    #     {
+    #         'id_producto' : 2,
+    #         'detalle_prod' :
+    #         {
+    #             'cantidad': 1,
+    #             'sub_total': 50000                
+    #         },
+    #     }],
+    #     "importe_total": 350000,
+    #     "forma_pago": 'Efectivo',
+    # },
+    # {
+    #     "id_venta": 2,
+    #     "detalle_venta": [{
+    #         'id_producto': 1,
+    #         'detalle_prod':
+    #         {
+    #                'cantidad': 1,
+    #                'sub_total': 50  
+    #         }              
+    #        }],
+    #     "importe_total": 50000,
+    #     "forma_pago": 'Tarjeta'
+    # },
 ]
+
+#Diccionarios
+# Venta
+#       "id_venta" - entero - 10 bits
+#  "importe_total" - flotante (999,999,999.9) - 11 bits
+#     "forma_pago" - string - 13 bits
+#1         |500000.0   |Transferencia|
+
+#Detalles_Ventas
+#      "id_venta" - entero - 10 bits
+#      "id_producto" - entero - 6 bits
+#         "cantidad" - entero - 3 bits
+#         "subtotal" - flotante (99999999.99) - 11 bits
+#1     |2     |2  |300000.0   |
+
+detalle_venta = {}
+
+def extraer_ventas():
+
+    ventas_arch = []
+    detalles_ventas = []
+
+    with open('venta.txt', 'r', encoding='UTF-8') as arch_venta, open('detalles_ventas.txt', 'r', encoding='UTF-8') as arch_detalle_venta:
+        ventas_arch = arch_venta.readlines()
+        detalles_ventas = arch_detalle_venta.readlines()
+        if len(ventas_arch) <= 0:
+            return 
+        for venta_item in ventas_arch:
+            venta ={
+                "id_venta": int(venta_item[0:9]),
+                "detalle_venta": [],
+                "importe_total": float(venta_item[11:21]),
+                "forma_pago": venta_item[23:36].strip('  ')
+                }
+            
+            
+            for det_vent in detalles_ventas:
+                if int(det_vent[0:5]) == venta['id_venta']:
+                    #print(f"{int(det_vent[0:5])} -  {venta['id_venta']}")
+                    detalle_venta = {
+                        'id_producto': int(det_vent[7:12]),
+                        'detalle_prod':
+                        {
+                               'cantidad': int(det_vent[14:16]),
+                               'sub_total': float(det_vent[18:29])  
+                        }              
+                    }
+                    venta['detalle_venta'].append(detalle_venta)
+                    
+            ventas.append(venta)
+
+
+def escribir_venta(venta):
+    with open('venta.txt', 'a', encoding='UTF-8') as arch_venta, open('detalles_ventas.txt', 'a', encoding='UTF-8') as arch_detalle_venta:
+ 
+        reg_vent = ""
+        reg_vent += f"{venta['id_venta']}{(" " * ( 10 - len(str(venta['id_venta'])) ) )}|" # id venta
+        reg_vent += f"{venta['importe_total']}{(" " * ( 11 - len(str(venta['importe_total'])) ) )}|" # nombre
+        reg_vent += f"{venta['forma_pago']}{(" " * ( 13 - len(venta['forma_pago']) ) )}|\n"# precio
+        arch_venta.write(reg_vent)
+        for det_venta in venta['detalle_venta']:
+            reg_det_vent = ""
+            reg_det_vent += f"{venta['id_venta']}{(" " * ( 10 - len(str(venta['id_venta'])) ) )}|" # id venta
+            reg_det_vent += f"{det_venta['id_producto']}{(" " * ( 6 - len(str(det_venta['id_producto'])) ) )}|" # id producto
+            reg_det_vent += f"{det_venta['detalle_prod']['cantidad']}{(" " * ( 3 - len(str(det_venta['detalle_prod']['cantidad'])) ) )}|" # cantidad
+            reg_det_vent += f"{det_venta['detalle_prod']['sub_total']}{(" " * ( 11 - len(str(det_venta['detalle_prod']['sub_total'])) ) )}|\n" # subtotal
+            arch_detalle_venta.write(reg_det_vent)
+
 
 metodos_pago = ("Efectivo", "Transferencia", "Tarjeta")
 
@@ -91,13 +228,15 @@ def agregar_prod():
     producto = {}
     print('|###--··  TecStore  ··--###|')
     print('|##-· Producto Nuevo')
-    producto['id'] = len(productos)+1
+    ultima_pocicion =  len(productos)-1
+    producto['id'] = productos[ultima_pocicion]['id'] + 1
     print(f'|##-· Producto ID: {producto['id']}')
     producto['nombre'] = input('|-Nobre del articulo: ').lower()
     producto['precio'] = float(input('|-Precio: $'))
     producto['stock'] = int(input('|-Stock Inicial: '))
 
     productos.append(producto)
+    escribir_producto(producto)
     print("Se Guardo el producto exitosamente!")
 
 
@@ -138,6 +277,7 @@ def eliminar_producto():
             if clave == 'id' and valor == int(id_buscar):
                 productos.remove(prod)
     print("Se Elimino el Producto exitosamente!")
+    reescribir_productos_archivo()
 
 def abm_producto():
     while True:
@@ -175,14 +315,15 @@ def listar_productos():
         print('|\t·No se emcontraron productos!')
         return
     for producto in productos:
+        renglon = f'|ID: {producto['id']}{(" " * ( 6 - len(str(producto['id'])) ) )}'
+        renglon += f'| {producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}'
+        renglon += f'| ${producto['precio']}{(" " * ( 11 - len(str(producto['precio'])) ) )}'
+        renglon += f'| STOCK: {producto['stock']}'
         if int(producto['stock']) < 4:
-            print(f'|ID: {producto['id']} | {producto['nombre']} | ${producto['precio']} | STOCK: {producto['stock']} (STOCK BAJO)')
+            renglon += '(STOCK BAJO)'
         elif int(producto['stock']) == 0:
-            print(f'|ID: {producto['id']} | {producto['nombre']} | ${producto['precio']} | STOCK: {producto['stock']} (SIN STOCK!!*!*!*!)')
-        else:
-            print(f'|ID: {producto['id']} | {producto['nombre']} | ${producto['precio']} | STOCK: {producto['stock']}')
-            
-
+            renglon += '(SIN STOCK!!*!*!*!)'
+        print(renglon)
 
 def mostrar_un_prod(id):
     encontrado = False
@@ -284,7 +425,7 @@ def realizar_venta():
         for prod_v in list_venta:
             descontar_stock(prod_v['id_producto'],prod_v['detalle_prod']['cantidad'])
         ventas.append(venta)
-
+        escribir_venta(venta)
         print("|##·· Se realizo la venta exitosamente! ··##|")
         print('|# Resumen de la venta!')
         print('|- Productos')
@@ -306,16 +447,15 @@ def listar_ventas():
         print('|  ·No se emcontraron ventas!')
         return
     for venta in ventas:
-        print(venta)
-        print(f'|- Venta Nroº: {venta['id_venta']}')
-        print('|- Productos')
+        print(f'o- Venta Nroº: {venta['id_venta']}')
+        print(' - Productos:')
         for prod_vent in venta['detalle_venta']:
             for producto in productos:
                 if producto['id'] == prod_vent['id_producto']:
-                    print(f'|\t-{producto['nombre']} | ${producto['precio']} - x {prod_vent['detalle_prod']['cantidad']} - SubTotal ${prod_vent['detalle_prod']['sub_total']} ')
-        print(f'|- Total: ${venta['importe_total']}')
-        print(f'|- Forma de pago: {venta['forma_pago']}')
-        print('|········································')
+                    print(f'     ·{producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}- ${producto['precio']}{(" " * ( 11 - len(str(producto['precio'])) ) )} - x {prod_vent['detalle_prod']['cantidad']} - SubTotal ${prod_vent['detalle_prod']['sub_total']} ')
+        print(f' - Total: ${venta['importe_total']}')
+        print(f' - Forma de pago: {venta['forma_pago']}')
+        print('-········································')
 
 
 
@@ -556,7 +696,12 @@ def estadisticas_generales():
     print(f'|-Metodo que menos recaudo: {stats_vent['metodo_menos_recaudado'][0]} - ${stats_vent['metodo_menos_recaudado'][1]['importe_metodo']}')
     print('|##················································')
 
+def sincronisar_datos():
+    extraer_productos()
+    extraer_ventas()
 
+
+sincronisar_datos()
 while True:
     limpiar_consola()
     print('|###--··  TecStore  ··--###|')
