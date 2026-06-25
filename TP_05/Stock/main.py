@@ -4,17 +4,30 @@ def limpiar_consola():
     os.system('cls' if os.name == 'nt' else 'clear')
 #lo anterior se realiza para poder limpiar la consola
 
-#Diccionarios
-# Productos
+
+
+#------                                           ------#
+#--------               PRODUCTOS               --------#
+#------                                           ------#
+
+
+#- Diccionarios de datos
+#Producto: 
 #      "id" - entero - 6 bits
 #  "nombre" - string - 30 bits
-#  "precio" - flotante (99999999.99) - 11 bits
+#  "precio" - flotante - 11 bits - (99999999.99)
 #   "stock" - entero - 4 bits
+
+# Registro de referencia:
 #1     |cosme fulanito               |25000.00   |20  |     
 
 
-producto = {}
-
+producto = {
+    #"id": 1,
+    #"nombre": "teclado mecanico",
+    #"precio": 150000,
+    #"stock": 8
+}
 
 productos = [
     # {
@@ -37,12 +50,37 @@ productos = [
     # }
 ]
 
-def extraer_productos():
+
+#--                                                   --#
+#----                                               ----#
+#------                                           ------#
+#--------  Funciones para gestion de archivos   --------#
+#------                                           ------#
+#----                                               ----#
+#--                                                   --#
+
+
+
+#|--------  ARCHIVO PRODUCTO   --------|#
+#   ________________________________
+#|--| Extraer productos del archivo|-----------------------------------------------------
+
+def extraer_productos():   
+
+    #  Abre con la funcion integrada -with open- el archivo "Productos.txt"
+    #  en modo 'r' (read / leer), se extraen todas las lineas (cada linea
+    #  es un registro) y se las agrega en una lista 'registros' luego,
+    #  recorre los registros ('reg'), crea una instancia del diccionario 
+    #  'producto' e inicializa las claves con las secciones que le corresponde,
+    #  casteando los atributos que son numeros y a los atributos que son tipo
+    #  -string- les quita los espacios con la funcion -strip-, cuando termina
+    #  de guardar todo en el diccionario, procede a agregarlo en la lista 'productos'
+    #  la cual sera usada en todo el programa
 
     registros = []
 
-    with open('Productos.txt', 'r', encoding='UTF-8') as file:
-        registros = file.readlines()
+    with open('Productos.txt', 'r', encoding='UTF-8') as archivo_producto:
+        registros = archivo_producto.readlines()
         if len(registros) <= 0:
             return
         for reg in registros:
@@ -55,29 +93,66 @@ def extraer_productos():
             productos.append(producto)
 
 
+
+#   __________________________________
+#|--| Guardar producto en el archivo |-------------------------------------------------
+
 def escribir_producto(producto):
-    with open('Productos.txt', 'a', encoding='UTF-8') as arch_prod:
+
+    #  Recibe de parametro un diccionario que se llama 'producto', luego con la funcion 
+    #  -with open- abre el archivo "Productos.txt" en modo 'a' ( add / agregar) se crea
+    #  una variable tipo -string- llamada 'reg_prod', se inicializa en vacio (""), esta
+    #  contendra el registro con el formato correcto (listo para ser guardado), por cada
+    #  atributo del 'producto' se corrobora la longitud, si la longitud no llega al limite 
+    #  dispuesto, se completa con espacios en blanco, ademas se agrega un separador '|' 
+    #  y se suma al final de la cadena, cuando se completa la cadena con los datos, 
+    #  se procede a escribir la variable 'reg_prod' con el metodo -write- en el archivo 
+    #  'archivo_producto', este registro se escribe al final del archivo
+    
+
+    with open('Productos.txt', 'a', encoding='UTF-8') as archivo_producto:
         reg_prod = ""
         reg_prod += f"{producto['id']}{(" " * ( 6 - len(str(producto['id'])) ) )}|" # id producto
         reg_prod += f"{producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}|" # nombre
         reg_prod += f"{producto['precio']}{(" " * ( 11 - len(str(producto['precio'])) ) )}|" # precio
         reg_prod += f"{producto['stock']}{(" " * ( 4 - len(str(producto['stock'])) ) )}|\n" # stock
-        arch_prod.write(reg_prod)
+        archivo_producto.write(reg_prod)
 
 
 
+#   _____________________________________________
+#|--| Borra todo y reescrive todo en el archivo |-------------------------------------------------
 
 def reescribir_productos_archivo():
-    with open('Productos.txt', 'w', encoding='UTF-8') as arch_prod:
+
+    #  Abre con la funcion integrada -with open- el archivo "Productos.txt"
+    #  en modo 'w' (write / escribir), este metodo borra todo el archivo, luego recorre 
+    #  la lista 'productos'. Por cada iteracion se crea una variable tipo -string- 
+    #  llamada 'reg_prod', se inicializa en vacio (""), esta contendra el registro con 
+    #  el formato correcto (listo para ser guardado), por cada atributo del 'producto' 
+    #  se corrobora la longitud, si la longitud no llega al limite dispuesto, se completa 
+    #  con espacios en blanco, ademas se agrega un separador '|' y se suma al final de 
+    #  la cadena, cuando se completa la cadena con los datos, se procede a escribir la 
+    #  variable 'reg_prod' con el metodo -write- en el archivo 'archivo_producto',
+    #  estos registros se van escribiendo al final del archivo, uno despues del otro
+
+    with open('Productos.txt', 'w', encoding='UTF-8') as archivo_producto:
         for producto in productos:
             reg_prod = ""
             reg_prod += f"{producto['id']}{(" " * ( 6 - len(str(producto['id'])) ) )}|" # id producto
             reg_prod += f"{producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}|" # nombre
             reg_prod += f"{producto['precio']}{(" " * ( 11 - len(str(producto['precio'])) ) )}|" # precio
             reg_prod += f"{producto['stock']}{(" " * ( 4 - len(str(producto['stock'])) ) )}|\n" # stock
-            arch_prod.write(reg_prod)
+            archivo_producto.write(reg_prod)
 
 
+
+#------                                           ------#
+#--------                  VENTA                --------#
+#------                                           ------#
+
+
+# primer intento de diccionario (funcionaba en la primer vercion)
 # ventas = [
 #     {
 #         "id_venta": 1,
@@ -98,23 +173,59 @@ def reescribir_productos_archivo():
 #     },
 # ]
 
-#Diccionarios
-# Venta
+
+
+
+#- Diccionarios de datos
+# Venta:
 #       "id_venta" - entero - 10 bits
 #  "importe_total" - flotante (999,999,999.9) - 11 bits
 #     "forma_pago" - string - 13 bits
+
+# Registro de referencia:
 #1         |500000.0   |Transferencia|
  
-# "id_detalle_venta" - entero - 11 bits (se conforma por id_venta mas id_producto por ejemplo el id_detalle_venta seria: '10' + '6' = 106)
 
 # Detalles_Ventas
 #      "id_venta" - entero - 6 bits
-#      "id_producto" - entero - 6 bits
-#         "cantidad" - entero - 3 bits
-#         "subtotal" - flotante (99999999.99) - 11 bits
+#   "id_producto" - entero - 6 bits
+#      "cantidad" - entero - 3 bits
+#      "subtotal" - flotante (99999999.99) - 11 bits
+
+# Registro de referencia:
 #1     |2     |2  |300000.0   |
 
-venta = {}
+venta = {
+    #"id_venta": 1,
+    #"detalle_venta": [
+    #{
+    #    'id_producto' : 1,
+    #    'detalle_prod' : 
+    #    {
+    #        'cantidad': 2,
+    #        'sub_total': 300000       
+    #    },
+    #},
+    #{
+    #    'id_producto' : 2,
+    #    'detalle_prod' :
+    #    {
+    #        'cantidad': 1,
+    #        'sub_total': 50000                
+    #    },
+    #}],
+    #"importe_total": 350000,
+    #"forma_pago": 'Efectivo',
+}
+
+detalle_venta = {
+    #'id_producto' : 1,
+    #'detalle_prod' : 
+    #{
+    #    'cantidad': 2,
+    #    'sub_total': 300000       
+    #},
+}
 
 ventas = [
     # {
@@ -154,23 +265,31 @@ ventas = [
     # },
 ]
 
-#Diccionarios
-# Venta
-#       "id_venta" - entero - 10 bits
-#  "importe_total" - flotante (999,999,999.9) - 11 bits
-#     "forma_pago" - string - 13 bits
-#1         |500000.0   |Transferencia|
 
-#Detalles_Ventas
-#      "id_venta" - entero - 10 bits
-#      "id_producto" - entero - 6 bits
-#         "cantidad" - entero - 3 bits
-#         "subtotal" - flotante (99999999.99) - 11 bits
-#1     |2     |2  |300000.0   |
 
-detalle_venta = {}
+
+
+#|--------  ARCHIVO VENTA   --------|#
+#   _____________________________
+#|--| Extraer ventas del archivo|-----------------------------------------------------
 
 def extraer_ventas():
+
+    #  Abre con la funcion integrada -with open- ambos archivos "venta.txt" y 
+    #  "detalles_ventas.txt" en modo 'r' (read / leer), se extraen todas las
+    #  lineas del archivo venta y detalles_ventas se las agrega en las lista
+    #  'ventas_arch' y 'detalles_ventas', luego recorre la lista 'ventas_arch', 
+    #  en cada 'venta_item', se crea una instacia de un diccionario 'venta', en
+    #  el cual, se inicializa las claves con los valores que contenian cada
+    #  seccion del 'venta_item', luego recorre la lista 'detalles_ventas', donde
+    #  por cada item ('det_vent') que recorre pregunta si es que en los 6 primeros
+    #  caracteres, son el id de la venta que se esta guardando, si encuentra
+    #  coincidencia, se crea una instacia de un diccionario 'detalle_venta', en 
+    #  el cual, se inicializa las claves con los valores que contenian cada
+    #  seccion del item ('det_vent') y guarda este diccionacio en la clave 
+    #  "detalle_venta" del dicionario 'venta'. Cuando ya guardo todos los
+    #  detalles, recien guarda la venta en la lista 'ventas' que se usara
+    #  en todo el programa. 
 
     ventas_arch = []
     detalles_ventas = []
@@ -193,11 +312,11 @@ def extraer_ventas():
                 if int(det_vent[0:5]) == venta['id_venta']:
                     #print(f"{int(det_vent[0:5])} -  {venta['id_venta']}")
                     detalle_venta = {
-                        'id_producto': int(det_vent[7:12]),
+                        'id_producto': int(det_vent[11:17]),
                         'detalle_prod':
                         {
-                               'cantidad': int(det_vent[14:16]),
-                               'sub_total': float(det_vent[18:29])  
+                               'cantidad': int(det_vent[18:21]),
+                               'sub_total': float(det_vent[22:32])  
                         }              
                     }
                     venta['detalle_venta'].append(detalle_venta)
@@ -205,9 +324,26 @@ def extraer_ventas():
             ventas.append(venta)
 
 
+
+#   _____________________________
+#|--| Guardar ventas del archivo|-----------------------------------------------------
+
 def escribir_venta(venta):
+
+    #  Recibe de parametro un diccionario 'venta', luego abre con la funcion
+    #  integrada with open ambos archivos "venta.txt" y "detalles_ventas.txt"
+    #  en modo 'a' (write / escribir (se escribe al final del archivo)) se crea
+    #  una variable 'reg_vent' tipo string que contendra el registro con el formato 
+    #  para ser guardado, por cada atributo se corrobora su longitud, si la longitud
+    #  no llega al limite dispuesto se completa con espacios en blanco, cuando se
+    #  completa toda la cadena, se procede a escribirse al final del archivo 'arch_venta',
+    #  luego por cada detalle de venta que este relacionado a ese 'id_venta' se crea
+    #  una variable 'reg_det_vent' tipo string que contendra el registro, por cada
+    #  atributo se corrobora su longitud, si la longitud no llega al limite dispuesto
+    #  se completa con espacios en blanco, luego, siguiendo el mismo sistema, lo agrega
+    #  al final del archivo 'arch_detalle_venta'
+
     with open('venta.txt', 'a', encoding='UTF-8') as arch_venta, open('detalles_ventas.txt', 'a', encoding='UTF-8') as arch_detalle_venta:
- 
         reg_vent = ""
         reg_vent += f"{venta['id_venta']}{(" " * ( 10 - len(str(venta['id_venta'])) ) )}|" # id venta
         reg_vent += f"{venta['importe_total']}{(" " * ( 11 - len(str(venta['importe_total'])) ) )}|" # nombre
@@ -224,22 +360,85 @@ def escribir_venta(venta):
 
 metodos_pago = ("Efectivo", "Transferencia", "Tarjeta")
 
+
+
+#--                                              --#
+#----                                          ----#
+#------                                      ------#
+#--------      Funciones para gestion      --------#
+#------                                      ------#
+#----                                          ----#
+#--                                              --#
+
+
+#|--------  PRODUCTOS --------|#
+#   ____________________
+#|--| Agregar Producto |-----------------------------------------------------
 def agregar_prod():
+
     producto = {}
     print('|###--··  TecStore  ··--###|')
     print('|##-· Producto Nuevo')
+
     ultima_pocicion =  len(productos)-1
     producto['id'] = productos[ultima_pocicion]['id'] + 1
     print(f'|##-· Producto ID: {producto['id']}')
-    producto['nombre'] = input('|-Nobre del articulo: ').lower()
-    producto['precio'] = float(input('|-Precio: $'))
-    producto['stock'] = int(input('|-Stock Inicial: '))
+
+    nombre_prod = input('|-Nobre del articulo: ').lower()
+    if nombre_prod == "":
+        print("# **Se Cancelo La operacion**")   
+        input('precione una tecla para continuar!') 
+        return        
+    elif len(nombre_prod) > 30:
+        print("# **Se exedio el limite de caracteres**")  
+        input('precione una tecla para continuar!') 
+        return        
+    else:
+        producto['nombre'] = nombre_prod
+
+    
+
+    precio_prod = input('|-Precio: $')
+    if precio_prod == "":
+        print("# **Se Cancelo La operacion**")   
+        input('precione una tecla para continuar!') 
+        return 
+    elif len(precio_prod) >= 12:
+        print("# **Numero demaciado grande**")   
+        input('precione una tecla para continuar!') 
+        return 
+    elif float(precio_prod) < 0:
+        print("# **no puede tener precio menor a cero**")   
+        input('precione una tecla para continuar!') 
+        return  
+    else:
+        producto['precio'] = float(precio_prod)
+
+
+    stock_prod = input('|-Stock Inicial: ')
+    if stock_prod == "":
+        print("# **Se Cancelo La operacion**")   
+        input('precione una tecla para continuar!') 
+        return 
+    elif len(stock_prod) >= 4:
+        print("# **Numero demaciado grande**")   
+        input('precione una tecla para continuar!') 
+        return 
+    elif int(stock_prod) < 0:
+        print("# **no puede tener stock menor a cero**")   
+        input('precione una tecla para continuar!') 
+        return  
+    else:
+        producto['stock'] = int(stock_prod)
+
 
     productos.append(producto)
     escribir_producto(producto)
     print("Se Guardo el producto exitosamente!")
 
 
+#   ______________________
+#|--| Modificar Producto |-----------------------------------------------------
 def mod_prod():
     producto = {}
     print('|###--··  TecStore  ··--###|')
@@ -248,26 +447,70 @@ def mod_prod():
     for prod in productos:
         for clave, valor in prod.items():
             if clave == 'id' and int(id_buscar) == valor:      
-                producto['id'] = len(prod)+1
-                print(f'|##-· Producto ID: {producto['id']}')
+                print(f'|##-· Producto ID: {prod['id']}')
+
+
                 print(f"|-Nobre anterior *{prod['nombre']}*")
-                producto['nombre'] = input('|-Nobre del articulo: ')
-                print(f"|-Precio anterior $*{prod['precio']}*")
-                producto['precio'] = float(input('|-Precio: $'))
+                nombre_nuevo = input('|-Nobre del articulo: ')
+                if len(nombre_nuevo) > 30:
+                    print("# **Se exedio el limite de caracteres**")  
+                    input('precione una tecla para continuar!') 
+                    return        
+                elif nombre_nuevo != "":
+                    producto['nombre'] = nombre_nuevo
+
+                print(f"|-Precio anterior $*{prod['precio']:,}*".replace(",","."))
+                precio_nuevo = input('|-Precio: $')
+                if precio_nuevo != "":
+                    if len(precio_nuevo) >= 12:
+                        print("# **Numero demaciado grande**")   
+                        input('precione una tecla para continuar!') 
+                        return 
+                    elif float(precio_nuevo) < 0:
+                        print("# **no puede tener precio menor a cero**")   
+                        input('precione una tecla para continuar!') 
+                        return  
+                    else:
+                        producto['precio'] = float(precio_nuevo)
+
                 prod.update(producto)
+    reescribir_productos_archivo()
     print("Se Guardo el producto exitosamente!")
 
+
+#   _______________________________
+#|--| Modificar Stock de Producto |-----------------------------------------------------
 def mod_stock_prod():
     print('|###--··  TecStore  ··--###|')
     print('|##-· Ingrese el Id del producto')
     id_buscar = input('|##-· ID: ')
     for prod in productos:
         for clave, valor in prod.items():
-            if clave == 'id' and int(id_buscar) == valor:      
-                print(f"|-Stock actual *{prod['stock']}*")
-                prod.update({'stock': int(input('|-Stock: '))})
+            if clave == 'id' and int(id_buscar) == valor:   
+                print(f"| {prod['nombre']}*")
+                print(f"| -Stock actual *{prod['stock']}*")
+                stock_nuevo = input('|-Nuevo Stock: ')
+                if stock_nuevo == "":
+                    print("# **Se Cancelo La operacion**")   
+                    input('precione una tecla para continuar!') 
+                    return 
+                elif len(stock_nuevo) >= 4:
+                    print("# **Numero demaciado grande**")   
+                    input('precione una tecla para continuar!') 
+                    return 
+                elif int(stock_nuevo) < 0:
+                    print("# **no puede tener stock menor a cero**")   
+                    input('precione una tecla para continuar!') 
+                    return  
+                else:
+                    prod.update({'stock': int(stock_nuevo)})
+
+    reescribir_productos_archivo()
     print("Se actualizo el stock exitosamente!")
 
+
+#   _____________________
+#|--| Eliminar Producto |-----------------------------------------------------
 def eliminar_producto():
     print('|###--··  TecStore  ··--###|')
     print('|##-· Ingrese el Id del producto')
@@ -275,10 +518,25 @@ def eliminar_producto():
     for prod in productos:
         for clave, valor in prod.items():
             if clave == 'id' and valor == int(id_buscar):
-                productos.remove(prod)
-    print("Se Elimino el Producto exitosamente!")
-    reescribir_productos_archivo()
+                print(f"\n# Producto: {prod['nombre'].upper()} - ${prod['precio']}\n")
+                print(f"# *Esta seguro que quiere eliminar este Producto?")
+                print( '#     Confirmar - 1   |    Cancelar - 0')
+                opcion = input("#Opcion: ")
+                if opcion != "":
+                    if opcion == "0":
+                        print("#   **Se Cancelo la operacion!**")                    
+                    elif opcion == "1":
+                        productos.remove(prod)
+                        print("Se Elimino el Producto exitosamente!")
+                        reescribir_productos_archivo()
+                    else:
+                        print("#   **Se Cancelo la operacion!**")
+                else:
+                    print("#   **Se Cancelo la operacion!**")
 
+
+#   _________________________________
+#|--| Sub-Menu de gestion Productos |-----------------------------------------------------
 def abm_producto():
     while True:
         limpiar_consola()
@@ -305,11 +563,12 @@ def abm_producto():
                 break
             case _:
                 print('Ingrese una opcion valida!')
-        
+
         input('precione una tecla para continuar!')
 
 
-
+#   ____________________
+#|--| Listar Productos |-----------------------------------------------------
 def listar_productos():
     if len(productos) == 0:
         print('|\t·No se emcontraron productos!')
@@ -319,12 +578,15 @@ def listar_productos():
         renglon += f'| {producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}'
         renglon += f'| ${producto['precio']}{(" " * ( 11 - len(str(producto['precio'])) ) )}'
         renglon += f'| STOCK: {producto['stock']}'
-        if int(producto['stock']) < 4:
-            renglon += '(STOCK BAJO)'
+        if int(producto['stock']) < 4 and int(producto['stock']) > 0:
+            renglon += ' (STOCK BAJO)'
         elif int(producto['stock']) == 0:
-            renglon += '(SIN STOCK!!*!*!*!)'
+            renglon += ' (SIN STOCK!!*!*!*!)'
         print(renglon)
 
+
+#   ________________________________
+#|--| Mostrar un producto por 'id' |-----------------------------------------------------
 def mostrar_un_prod(id):
     encontrado = False
     for producto in productos:
@@ -333,6 +595,10 @@ def mostrar_un_prod(id):
             return producto
     if encontrado is False : return False
 
+
+
+#   ____________________
+#|--| Descontar Stock  |-----------------------------------------------------
 def descontar_stock(id,cantidad):
     for producto in productos:
         for clave, valor in producto.items():
@@ -340,126 +606,9 @@ def descontar_stock(id,cantidad):
                 producto['stock'] = producto['stock'] - cantidad
 
 
-def realizar_venta():
-    descuento = False
-    venta = {}
-    list_venta = []
-    print('|###--··  TecStore  ··--###|')
-    listar_productos()
-    total_venta = 0
-    while True:
-        print('|##-· Ingrese el Id del producto o Dejar vacio para continuar')
-        id_v = input('|##-· ID: ')
-        if id_v.lower() == '':
-            break
-        for producto in productos:
-            if int(id_v) == producto['id']:
-                cant = 1
-                cant = int(input('|##-· Cantidad: '))
-                if producto['stock'] > 0:
-                    v = {
-                            'cantidad': cant,
-                            'sub_total': (producto['precio'] * cant)  
-                        }
-                    total_venta = total_venta + (producto['precio'] * cant)
-                    #producto['stock'] = producto['stock'] - cant
-                    prod_venta = {
-                        'id_producto': producto['id'],
-                        'detalle_prod': v
-                    }
-                    list_venta.append(prod_venta)
-                else:
-                    print('|# Producto Sin Stock')
-                print(f'|#-{producto['nombre']} x {cant} Agregado a la compra')        
-    venta["importe_total"] = total_venta
-    if len(list_venta) > 0:
-        venta['id_venta'] = len(ventas) + 1
-        venta['detalle_venta'] = list_venta
-        while True:
-            print('|##-· Para continuar, ingrese la forma de pago')
-            print('|· (1) Efectivo · (2) Transferencia · (3) Tarjeta · (0) Cancelar')
-            op =  input('|##-Forma de Pago: ')
-            match op:
-                case '1':
-                    venta['forma_pago'] = metodos_pago[int(op)-1]
-                    break
-                case '2':
-                    venta['forma_pago'] = metodos_pago[int(op)-1]
-                    break
-                case '3':
-                    venta['forma_pago'] = metodos_pago[int(op)-1]
-                    break
-                case "0":
-                    print('|##- Venta Cancelada! ')
-                    return
-                case _:
-                    print('Ingrese una opcion valida!')
 
-        while True:
-            print('|##-· Aplicar descuentos')
-            print('|· (1) % Porcentaje · (2) $ Importe · (0) Sin Descuentos')
-            opc = input('|##-Opcion: ')
-            
-
-            if opc == "1":
-                desc = float(input('|#  ·Descuento: %'))
-                venta['importe_total'] = float(venta['importe_total'])-(float(venta['importe_total'])*(desc/100))
-                print(f'|-----------Importe Total ${total_venta} ')
-                print(f'|-----------Importe con Descuento ${venta['importe_total']} ')
-                descuento = True
-                break
-            elif opc == "2":
-                desc = float(input('|#  ·Descuento: $'))
-                venta['importe_total'] = venta['importe_total'] - desc
-                print(f'|-----------Importe Total ${total_venta} ')
-                print(f'|-----------Importe con Descuento ${venta['importe_total']} ')
-                descuento = True
-                break
-            elif opc == "0":
-                print(f'|-----------Importe Actual ${venta['importe_total']}')
-                break
-            else:
-                print(f'|# No se indico una opcion valida!')
-
-        
-        for prod_v in list_venta:
-            descontar_stock(prod_v['id_producto'],prod_v['detalle_prod']['cantidad'])
-        ventas.append(venta)
-        escribir_venta(venta)
-        print("|##·· Se realizo la venta exitosamente! ··##|")
-        print('|# Resumen de la venta!')
-        print('|- Productos')
-        print('|········································')
-        for prodc_v in venta['detalle_venta']:
-            producto = mostrar_un_prod(prodc_v['id_producto'])
-            print(f'|{producto['nombre']} - precio unitario ${producto['precio']} ')
-            print(f'|\t\tx {prodc_v['detalle_prod']['cantidad']} - SubTotal ${prodc_v['detalle_prod']['sub_total']} ')
-            print('|········································')
-        print(f'|- Total: ${total_venta}')
-        if descuento : print(f'|- Total(Descuento): ${venta['importe_total']}')
-        print(f'|- Forma de pago: {venta['forma_pago']}')
-
-
-        
-def listar_ventas():
-    print('|# Lista de Ventas')
-    if len(ventas) == 0:
-        print('|  ·No se emcontraron ventas!')
-        return
-    for venta in ventas:
-        print(f'o- Venta Nroº: {venta['id_venta']}')
-        print(' - Productos:')
-        for prod_vent in venta['detalle_venta']:
-            for producto in productos:
-                if producto['id'] == prod_vent['id_producto']:
-                    print(f'     ·{producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}- ${producto['precio']}{(" " * ( 11 - len(str(producto['precio'])) ) )} - x {prod_vent['detalle_prod']['cantidad']} - SubTotal ${prod_vent['detalle_prod']['sub_total']} ')
-        print(f' - Total: ${venta['importe_total']}')
-        print(f' - Forma de pago: {venta['forma_pago']}')
-        print('-········································')
-
-
-
-
+#   ______________________
+#|--| Filtrar Productos  |-----------------------------------------------------
 def fitrador(filtro, buscar):
     encontrado = False
     for producto in productos:
@@ -471,8 +620,9 @@ def fitrador(filtro, buscar):
         print('|#·No se econtro el producto!***')
 
 
+#   __________________________
+#|--| Buscardor de Productos |-----------------------------------------------------
 def buscador():
-     
      while True:
         limpiar_consola()
         print('|###--··  TecStore  ··--###|')
@@ -511,6 +661,198 @@ def buscador():
         input('precione una tecla para continuar!')
 
 
+
+#|--------  VENTAS  --------|#
+#   __________________
+#|--| Realizar Venta |-----------------------------------------------------
+def realizar_venta():
+    #limpiar_consola()
+    descuento = False
+    venta = {}
+    list_prods = []
+    total_venta = 0
+
+
+
+    while True:
+        limpiar_consola()
+        print('|###--··  TecStore  ··--###|')
+        listar_productos()
+        print('|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||')
+        if len(list_prods) > 0:
+            print('||||-Carrito:')
+            for prod in list_prods:
+                print(f'||-{mostrar_un_prod(prod['id_producto'])['nombre'].upper()} x {prod['detalle_prod']['cantidad']}')
+            print(f'||\t\t\t·Total: ${total_venta}')
+            print('|---------------------------------------------------------------------------')
+        print('|-· Ingrese el Id del producto (Dejar vacio para continuar)')
+        id_v = input('|##-· ID: ')
+
+        if id_v == '':
+            break
+
+        
+
+        for producto in productos:
+            if int(id_v) == producto['id']:
+                cant = 0
+                cant_str = ""
+                cant_str = input('|##-· Cantidad: ')
+                if cant_str == "":
+                    cant = 1
+                else:
+                    cant = int(cant_str)
+                if producto['stock'] > 0 and producto['stock'] >= cant:
+                    v = {
+                            'cantidad': cant,
+                            'sub_total': (producto['precio'] * cant)  
+                        }
+                    total_venta = total_venta + (producto['precio'] * cant)
+                    #producto['stock'] = producto['stock'] - cant
+                    prod_venta = {
+                        'id_producto': producto['id'],
+                        'detalle_prod': v
+                    }
+                    list_prods.append(prod_venta)
+                else:
+                    print('|# Producto Sin Stock')
+                    input('precione una tecla para continuar!')
+                    break
+                print(f'|\t-{producto['nombre'].upper()} x {cant} Agregado a la compra') 
+                input('precione una tecla para continuar!')
+
+
+
+    venta["importe_total"] = total_venta
+
+
+    if len(list_prods) > 0:
+        venta['id_venta'] = len(ventas) + 1
+        venta['detalle_venta'] = list_prods
+
+        while True:
+            limpiar_consola()
+            print('|###--··  TecStore  ··--###|')
+
+            for prod in list_prods:
+                nom_prod = mostrar_un_prod(prod['id_producto'])['nombre'].upper()
+                cant_prod = prod['detalle_prod']['cantidad']
+                sub_total_prod = prod['detalle_prod']['sub_total']
+
+                print(f'|-{nom_prod}{" " * (30 - len(nom_prod))} x {cant_prod} - ${sub_total_prod}')
+            print(f'|\n|{"-" * 31}Total: ${total_venta}')
+
+            print('|##-· Forma de pago')
+            print('|· (1) Efectivo · (2) Transferencia · (3) Tarjeta · (0) Cancelar')
+            op =  input('|##-Forma de Pago: ')
+            match op:
+                case '1':
+                    venta['forma_pago'] = metodos_pago[int(op)-1]
+                    break
+                case '2':
+                    venta['forma_pago'] = metodos_pago[int(op)-1]
+                    break
+                case '3':
+                    venta['forma_pago'] = metodos_pago[int(op)-1]
+                    break
+                case "0":
+                    print('|##- Venta Cancelada! ')
+                    return
+                case "":
+                    print('|##- Venta Cancelada! ')
+                    return
+                case _:
+                    print('Ingrese una opcion valida!')
+
+        while True:
+            print('|##-· Aplicar descuentos')
+            print('|· (1) % Porcentaje · (2) $ Importe · (0) Sin Descuentos')
+            opc = input('|##-Opcion: ')
+            
+
+            if opc == "1":
+                desc = float(input('|#  ·Descuento: % '))
+                venta['importe_total'] = float(venta['importe_total'])-(float(venta['importe_total'])*(desc/100))
+                print(f'|-----------Importe Total ${total_venta} ')
+                print(f'|-----------Importe con Descuento ${venta['importe_total']} ')
+                descuento = True
+                break
+            elif opc == "2":
+                desc = float(input('|#  ·Descuento: $ '))
+                venta['importe_total'] = venta['importe_total'] - desc
+                print(f'|-----------| Importe Total ${total_venta} ')
+                print(f'|-----------| Importe con Descuento ${venta['importe_total']} ')
+                descuento = True
+                break
+            elif opc == "0":
+                print(f'|-----------Importe Actual ${venta['importe_total']}')
+                break
+            elif opc == "":
+                print(f'|-----------Importe Actual ${venta['importe_total']}')
+                break
+            else:
+                print(f'|# No se indico una opcion valida!')
+
+        
+        for prod_v in list_prods:
+            descontar_stock(prod_v['id_producto'],prod_v['detalle_prod']['cantidad'])
+        ventas.append(venta)
+        escribir_venta(venta)
+        reescribir_productos_archivo()
+        print("|##·· Se realizo la venta exitosamente! ··##|")
+        input('precione una tecla para continuar!')
+        limpiar_consola()
+
+        print('|# Resumen de la venta!')
+        print('|-- Productos')
+        for prod in list_prods:
+            prod_dicc = mostrar_un_prod(prod['id_producto'])
+            linea = "| ·"
+            
+            linea += prod_dicc['nombre'].upper()
+            linea += " " * (30 - len(prod_dicc['nombre'].upper()))
+            linea += f'${prod_dicc['precio']} C/U '
+            linea += " " * (11 - len(str(prod_dicc['precio'])))
+            linea += f'x {prod['detalle_prod']['cantidad']}'
+            linea += f' - ${prod['detalle_prod']['sub_total']}'
+            
+            print(linea)
+            
+            #print(f'|-{nom_prod}{" " * (30 - len(nom_prod))} ${prod_dicc['precio']} C/U x {cant_prod}{" " *(11 - len(str(cant_prod)))} - ${sub_total_prod}')
+        
+        print(f'|-- Total: ${total_venta}')
+        if descuento : print(f'|-- Total Neto(Descuento): ${venta['importe_total']}')
+        print(f'|-- Forma de pago: {venta['forma_pago']}')
+
+    input('precione una tecla para continuar!')
+
+
+
+#   _________________
+#|--| Listar Ventas |-----------------------------------------------------
+def listar_ventas():
+    print('|# Lista de Ventas')
+    if len(ventas) == 0:
+        print('|  ·No se emcontraron ventas!')
+        return
+    for venta in ventas:
+        print(f'o- Venta Nroº: {venta['id_venta']}')
+        print(' - Productos:')
+        for prod_vent in venta['detalle_venta']:
+            for producto in productos:
+                if producto['id'] == prod_vent['id_producto']:
+                    print(f'     ·{producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}- ${producto['precio']}{(" " * ( 11 - len(str(producto['precio'])) ) )} - x {prod_vent['detalle_prod']['cantidad']} - SubTotal ${prod_vent['detalle_prod']['sub_total']} ')
+        print(f' - Total: ${venta['importe_total']}')
+        print(f' - Forma de pago: {venta['forma_pago']}')
+        print('-········································')
+    input('precione una tecla para continuar!')
+
+
+
+
+
+
+
 # def ordenador_stock(orden):
 #     if orden == 1:
         
@@ -519,6 +861,19 @@ def buscador():
         
 #         return prod_stock
 
+
+#--                                               --#
+#----                                           ----#
+#------                                       ------#
+#--------     Funciones de Estadisticas     --------#
+#------                                       ------#
+#----                                           ----#
+#--                                               --#
+
+
+#|--------  PRODUCTOS --------|#
+#   _____________________________
+#|--| Estadisticas de Productos |-----------------------------------------------------
 def estadisticas_productos():
     info_productos = {}
 
@@ -538,6 +893,12 @@ def estadisticas_productos():
 
     return info_productos
 
+
+
+
+#|--------  VENTAS --------|#
+#   __________________________
+#|--| Estadisticas de Ventas |-----------------------------------------------------
 def estadisticas_ventas():
     info_ventas = {}
 
@@ -671,6 +1032,11 @@ def estadisticas_ventas():
     return info_ventas
 
 
+
+
+#|--------  GENERAL --------|#
+#   __________________________
+#|--| Estadisticas Generales |-----------------------------------------------------
 def estadisticas_generales():
     limpiar_consola()
     print('|###--··  TecStore  ··--###|')
@@ -695,18 +1061,42 @@ def estadisticas_generales():
     print(f'|-Metodo que mas recaudo: {stats_vent['metodo_mas_recaudado'][0]} - ${stats_vent['metodo_mas_recaudado'][1]['importe_metodo']}')
     print(f'|-Metodo que menos recaudo: {stats_vent['metodo_menos_recaudado'][0]} - ${stats_vent['metodo_menos_recaudado'][1]['importe_metodo']}')
     print('|##················································')
+    input('precione una tecla para continuar!')
 
+
+
+
+#------                                ------#
+#--------     Funciones auxiliar     --------#
+#------                                ------#
+#   _______________________________________
+#|--| Sincronizacion de datos con Archivo |-----------------------------------------------------
 def sincronisar_datos():
     extraer_productos()
     extraer_ventas()
 
 
+
+
+#--                                      --#
+#----                                  ----#
+#------                              ------#
+#--------      Menu De Inicio      --------#
+#------                              ------#
+#----                                  ----#
+#--                                      --#
+
+
+
+#|--------  Inicio del Programa   --------|#
+#   _________________
+#|--| Menu de Inicio|-----------------------------------------------------
 sincronisar_datos()
 while True:
     limpiar_consola()
     print('|###--··  TecStore  ··--###|')
     print('|##······················##|')
-    print('| 1 ) --- Agregar Producto') 
+    print('| 1 ) --- Gestion de Producto') 
     print('| 2 ) --- Mostrar Productos')
     print('| 3 ) --- Modificar Stock') 
     print('| 4 ) --- Realizar Venta')
@@ -724,6 +1114,7 @@ while True:
         case "2":
             print('|·# Productos')
             listar_productos()
+            input('precione una tecla para continuar!')
         case "3":
             mod_stock_prod()
         case "4":
@@ -742,5 +1133,5 @@ while True:
         case _:
             print('Ingrese una opcion valida!')
     
-    input('precione una tecla para continuar!')
+    #input('precione una tecla para continuar!')
 

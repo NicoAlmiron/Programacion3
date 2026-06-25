@@ -1,2 +1,10 @@
 1         |300000.0   |Efectivo     |
 2         |180000.0   |Transferencia|
+3         |300000.0   |Efectivo     |
+4         |360000.0   |Transferencia|
+5         |464000.0   |Tarjeta      |
+6         |2203200.18 |Efectivo     |
+7         |3536850.34 |Transferencia|
+8         |408500.0   |Efectivo     |
+9         |1489000.1  |Efectivo     |
+10        |265000.0   |Efectivo     |

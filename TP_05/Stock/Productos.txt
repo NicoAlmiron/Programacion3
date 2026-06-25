@@ -1,3 +1,5 @@
-1     |teclado mecanico              |150000.0   |10  |
-2     |mouse gamer                   |50000.0    |20  |
-3     |prueba                        |999000.1   |9   |
+1     |teclado mecanico              |150000.0   |7   |
+2     |mouse gamer                   |50000.0    |17  |
+3     |prueba                        |999000.1   |8   |
+4     |gtx 1050 4g strix             |165000.0   |5   |
+5     |prueba                        |91919191.0 |0   |
