@@ -1052,9 +1052,9 @@ def estadisticas_ventas():
 
 
     # print('|-Metodo de Pago que mas recaudo: efectivo - $99999')
-    info_ventas.update({'metodo_mas_recaudado':metodo_mas_recaudado[0]})
+    info_ventas.update({'metodo_menos_recaudado':metodo_mas_recaudado[0]})
     # print('|-Metodo de Pago que menos recaudo: tarjeta - $1000')
-    info_ventas.update({'metodo_menos_recaudado':metodo_menos_recaudado[0]})
+    info_ventas.update({'metodo_mas_recaudado':metodo_menos_recaudado[0]})
 
     return info_ventas
 
