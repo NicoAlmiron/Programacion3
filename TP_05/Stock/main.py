@@ -518,10 +518,10 @@ def eliminar_producto():
     for prod in productos:
         for clave, valor in prod.items():
             if clave == 'id' and valor == int(id_buscar):
-                print(f"\n# Producto: {prod['nombre'].upper()} - ${prod['precio']}\n")
+                print(f"\n# Producto: {prod['nombre'].upper()} - ${prod['precio']:,}\n")
                 print(f"# *Esta seguro que quiere eliminar este Producto?")
                 print( '#     Confirmar - 1   |    Cancelar - 0')
-                opcion = input("#Opcion: ")
+                opcion = input("#Opcion: ")       
                 if opcion != "":
                     if opcion == "0":
                         print("#   **Se Cancelo la operacion!**")                    
@@ -574,9 +574,10 @@ def listar_productos():
         print('|\t·No se emcontraron productos!')
         return
     for producto in productos:
+        precio_prod = f'{producto['precio']:,}'
         renglon = f'|ID: {producto['id']}{(" " * ( 6 - len(str(producto['id'])) ) )}'
         renglon += f'| {producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}'
-        renglon += f'| ${producto['precio']}{(" " * ( 11 - len(str(producto['precio'])) ) )}'
+        renglon += f'| ${producto['precio']:,}{(" " * ( 13 - len(precio_prod)))}'
         renglon += f'| STOCK: {producto['stock']}'
         if int(producto['stock']) < 4 and int(producto['stock']) > 0:
             renglon += ' (STOCK BAJO)'
@@ -584,6 +585,17 @@ def listar_productos():
             renglon += ' (SIN STOCK!!*!*!*!)'
         print(renglon)
 
+def imprimir_producto(producto):
+    precio_prod = f'{producto['precio']:,}'
+    renglon = f'|ID: {producto['id']}{(" " * ( 6 - len(str(producto['id'])) ) )}'
+    renglon += f'| {producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}'
+    renglon += f'| ${producto['precio']:,}{(" " * ( 13 - len(precio_prod)))}'
+    renglon += f'| STOCK: {producto['stock']}'
+    if int(producto['stock']) < 4 and int(producto['stock']) > 0:
+        renglon += ' (STOCK BAJO)'
+    elif int(producto['stock']) == 0:
+        renglon += ' (SIN STOCK!!*!*!*!)'
+    print(renglon)
 
 #   ________________________________
 #|--| Mostrar un producto por 'id' |-----------------------------------------------------
@@ -642,17 +654,29 @@ def buscador():
                 print('|###--··  TecStore  ··--###|')
                 print('|##--- Ingrese el Nombre a Buscar')
                 nombre = input('|Nombre···---: ').lower()
-                fitrador('nombre', nombre.lower())
+                prod = fitrador('nombre', nombre.lower())
+                if prod :
+                    imprimir_producto(prod)
+                else:
+                    print('# *No se encontro el producto***')
             case "2":
                 print('|###--··  TecStore  ··--###|')
                 print('|##--- Ingrese el ID a Buscar')
                 id_prod = int(input('|ID ···---: '))
-                fitrador('id', id_prod)
+                prod = fitrador('id', id_prod)
+                if prod :
+                    imprimir_producto(prod)
+                else:
+                    print('# *No se encontro el producto***')
             case "3":
                 print('|###--··  TecStore  ··--###|')
                 print('|##--- Ingrese el Precio a Buscar')
                 precio = float(input('|Precio ···---: $'))
-                fitrador('precio', precio)
+                prod = fitrador('precio', precio)
+                if prod :
+                    imprimir_producto(prod)
+                else:
+                    print('# *No se encontro el producto***')
             case "0":
                 break
             case _:
@@ -683,7 +707,7 @@ def realizar_venta():
             print('||||-Carrito:')
             for prod in list_prods:
                 print(f'||-{mostrar_un_prod(prod['id_producto'])['nombre'].upper()} x {prod['detalle_prod']['cantidad']}')
-            print(f'||\t\t\t·Total: ${total_venta}')
+            print(f'||\t\t\t·Total: ${total_venta:,}')
             print('|---------------------------------------------------------------------------')
         print('|-· Ingrese el Id del producto (Dejar vacio para continuar)')
         id_v = input('|##-· ID: ')
@@ -739,8 +763,9 @@ def realizar_venta():
                 cant_prod = prod['detalle_prod']['cantidad']
                 sub_total_prod = prod['detalle_prod']['sub_total']
 
-                print(f'|-{nom_prod}{" " * (30 - len(nom_prod))} x {cant_prod} - ${sub_total_prod}')
-            print(f'|\n|{"-" * 31}Total: ${total_venta}')
+                print(f'|-{nom_prod}{" " * (30 - len(nom_prod))} x {cant_prod} - ${sub_total_prod:,}')
+            
+            print(f'|\n|{"-" * 31}Total: ${total_venta:,}')
 
             print('|##-· Forma de pago')
             print('|· (1) Efectivo · (2) Transferencia · (3) Tarjeta · (0) Cancelar')
@@ -773,22 +798,22 @@ def realizar_venta():
             if opc == "1":
                 desc = float(input('|#  ·Descuento: % '))
                 venta['importe_total'] = float(venta['importe_total'])-(float(venta['importe_total'])*(desc/100))
-                print(f'|-----------Importe Total ${total_venta} ')
-                print(f'|-----------Importe con Descuento ${venta['importe_total']} ')
+                print(f'|-----------Importe Total ${total_venta:,} ')
+                print(f'|-----------Importe con Descuento ${venta['importe_total']:,} ')
                 descuento = True
                 break
             elif opc == "2":
                 desc = float(input('|#  ·Descuento: $ '))
                 venta['importe_total'] = venta['importe_total'] - desc
-                print(f'|-----------| Importe Total ${total_venta} ')
-                print(f'|-----------| Importe con Descuento ${venta['importe_total']} ')
+                print(f'|-----------| Importe Total ${total_venta:,} ')
+                print(f'|-----------| Importe con Descuento ${venta['importe_total']:,} ')
                 descuento = True
                 break
             elif opc == "0":
-                print(f'|-----------Importe Actual ${venta['importe_total']}')
+                print(f'|-----------Importe Actual ${venta['importe_total']:,}')
                 break
             elif opc == "":
-                print(f'|-----------Importe Actual ${venta['importe_total']}')
+                print(f'|-----------Importe Actual ${venta['importe_total']:,}')
                 break
             else:
                 print(f'|# No se indico una opcion valida!')
@@ -807,21 +832,22 @@ def realizar_venta():
         print('|-- Productos')
         for prod in list_prods:
             prod_dicc = mostrar_un_prod(prod['id_producto'])
+            prcio_prod = f'{prod_dicc['precio']:,}'
             linea = "| ·"
             
             linea += prod_dicc['nombre'].upper()
             linea += " " * (30 - len(prod_dicc['nombre'].upper()))
-            linea += f'${prod_dicc['precio']} C/U '
-            linea += " " * (11 - len(str(prod_dicc['precio'])))
+            linea += f'${prcio_prod} C/U '
+            linea += " " * (11 - len(prcio_prod))
             linea += f'x {prod['detalle_prod']['cantidad']}'
-            linea += f' - ${prod['detalle_prod']['sub_total']}'
+            linea += f' - ${prod['detalle_prod']['sub_total']:,}'
             
             print(linea)
             
             #print(f'|-{nom_prod}{" " * (30 - len(nom_prod))} ${prod_dicc['precio']} C/U x {cant_prod}{" " *(11 - len(str(cant_prod)))} - ${sub_total_prod}')
         
-        print(f'|-- Total: ${total_venta}')
-        if descuento : print(f'|-- Total Neto(Descuento): ${venta['importe_total']}')
+        print(f'|-- Total: ${total_venta:,}')
+        if descuento : print(f'|-- Total Neto(Descuento): ${venta['importe_total']:,}')
         print(f'|-- Forma de pago: {venta['forma_pago']}')
 
     input('precione una tecla para continuar!')
@@ -841,8 +867,9 @@ def listar_ventas():
         for prod_vent in venta['detalle_venta']:
             for producto in productos:
                 if producto['id'] == prod_vent['id_producto']:
-                    print(f'     ·{producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}- ${producto['precio']}{(" " * ( 11 - len(str(producto['precio'])) ) )} - x {prod_vent['detalle_prod']['cantidad']} - SubTotal ${prod_vent['detalle_prod']['sub_total']} ')
-        print(f' - Total: ${venta['importe_total']}')
+                    precio_prod = f'{producto['precio']:,}'
+                    print(f'     ·{producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}- ${precio_prod}{(" " * ( 11 - len(precio_prod) ) )} - x {prod_vent['detalle_prod']['cantidad']} - SubTotal ${prod_vent['detalle_prod']['sub_total']:,} ')
+        print(f' - Total: ${venta['importe_total']:,}')
         print(f' - Forma de pago: {venta['forma_pago']}')
         print('-········································')
     input('precione una tecla para continuar!')
@@ -1044,22 +1071,22 @@ def estadisticas_generales():
     stats_vent=estadisticas_ventas()
     print('|##·· Estadisticas Generales')
     print(f'|-Cantidad de productos registrados: {len(productos)}')
-    print(f'|-Cantidad de Ventas Totales: {stats_vent['cantidad_venta']} - Recaudado: ${stats_vent['cantidad_ganancia']}')
+    print(f'|-Cantidad de Ventas Totales: {stats_vent['cantidad_venta']} - Recaudado: ${stats_vent['cantidad_ganancia']:,}')
     print('|')
     print('|##·· Estadisticas Productos')
     print(f'|-Producto Mas Vendido: {stats_vent['prod_mas_vendidos'][1]['nombre']} - vendidos: {stats_vent["prod_mas_vendidos"][1]['cantidad_vendidos']}')
     print(f'|-Producto Menos Vendido: {stats_vent['prod_menos_vendidos'][1]['nombre']} - vendidos: {stats_vent["prod_menos_vendidos"][1]['cantidad_vendidos']}')
     print('|')
     print('|##·· Estadisticas Stock')
-    print(f'|-Cantidad total de Productos: {stats_prod['cantidad_existencias']} - capital: $ {stats_prod['capital_neto']}')
+    print(f'|-Cantidad total de Productos: {stats_prod['cantidad_existencias']} - capital: ${stats_prod['capital_neto']:,}')
     print(f'|-Producto con mas Stock: {stats_prod['prod_stock_bajo']['nombre']} - stock: {stats_prod['prod_stock_bajo']['stock']}')
     print(f'|-Producto con menos Stock: {stats_prod['prod_stock_alto']['nombre']} - stock: {stats_prod['prod_stock_alto']['stock']}')
     print('|')
     print('|##·· Estadisticas Metodos de Pago')
-    print(f'|-Mas usado: {stats_vent['metodo_mas_usado'][0]} ({stats_vent['metodo_mas_usado'][1]['veces_usado']} veces) - ${stats_vent['metodo_mas_usado'][1]['importe_metodo']}')
-    print(f'|-Menos usado: {stats_vent['metodo_menos_usado'][0]} ({stats_vent['metodo_menos_usado'][1]['veces_usado']} veces) - ${stats_vent['metodo_menos_usado'][1]['importe_metodo']}')
-    print(f'|-Metodo que mas recaudo: {stats_vent['metodo_mas_recaudado'][0]} - ${stats_vent['metodo_mas_recaudado'][1]['importe_metodo']}')
-    print(f'|-Metodo que menos recaudo: {stats_vent['metodo_menos_recaudado'][0]} - ${stats_vent['metodo_menos_recaudado'][1]['importe_metodo']}')
+    print(f'|-Mas usado: {stats_vent['metodo_mas_usado'][0]} ({stats_vent['metodo_mas_usado'][1]['veces_usado']} veces) - ${stats_vent['metodo_mas_usado'][1]['importe_metodo']:,}')
+    print(f'|-Menos usado: {stats_vent['metodo_menos_usado'][0]} ({stats_vent['metodo_menos_usado'][1]['veces_usado']} veces) - ${stats_vent['metodo_menos_usado'][1]['importe_metodo']:,}')
+    print(f'|-Metodo que mas recaudo: {stats_vent['metodo_mas_recaudado'][0]} - ${stats_vent['metodo_mas_recaudado'][1]['importe_metodo']:,}')
+    print(f'|-Metodo que menos recaudo: {stats_vent['metodo_menos_recaudado'][0]} - ${stats_vent['metodo_menos_recaudado'][1]['importe_metodo']:,}')
     print('|##················································')
     input('precione una tecla para continuar!')
 
