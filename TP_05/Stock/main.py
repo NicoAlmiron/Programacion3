@@ -482,6 +482,7 @@ def mod_prod():
 #|--| Modificar Stock de Producto |-----------------------------------------------------
 def mod_stock_prod():
     print('|###--··  TecStore  ··--###|')
+    listar_productos(productos)
     print('|##-· Ingrese el Id del producto')
     id_buscar = input('|##-· ID: ')
     for prod in productos:
@@ -507,7 +508,6 @@ def mod_stock_prod():
 
     reescribir_productos_archivo()
     print("Se actualizo el stock exitosamente!")
-
 
 #   _____________________
 #|--| Eliminar Producto |-----------------------------------------------------
@@ -569,11 +569,11 @@ def abm_producto():
 
 #   ____________________
 #|--| Listar Productos |-----------------------------------------------------
-def listar_productos():
-    if len(productos) == 0:
+def listar_productos(lista_productos):
+    if len(lista_productos) == 0:
         print('|\t·No se emcontraron productos!')
         return
-    for producto in productos:
+    for producto in lista_productos:
         precio_prod = f'{producto['precio']:,}'
         renglon = f'|ID: {producto['id']}{(" " * ( 6 - len(str(producto['id'])) ) )}'
         renglon += f'| {producto['nombre']}{(" " * ( 30 - len(producto['nombre']) ) )}'
@@ -611,8 +611,8 @@ def mostrar_un_prod(id):
 
 #   ____________________
 #|--| Descontar Stock  |-----------------------------------------------------
-def descontar_stock(id,cantidad):
-    for producto in productos:
+def descontar_stock(lista_prods ,id ,cantidad):
+    for producto in lista_prods:
         for clave, valor in producto.items():
             if clave == 'id' and valor == id:
                 producto['stock'] = producto['stock'] - cantidad
@@ -690,6 +690,12 @@ def buscador():
 #   __________________
 #|--| Realizar Venta |-----------------------------------------------------
 def realizar_venta():
+    productos_auxiliar = []
+    #productos_auxiliar = producto
+    #productos_auxiliar = productos.copy()
+    for producto in productos:
+        productos_auxiliar.append(producto.copy())
+
     #limpiar_consola()
     descuento = False
     venta = {}
@@ -701,7 +707,7 @@ def realizar_venta():
     while True:
         limpiar_consola()
         print('|###--··  TecStore  ··--###|')
-        listar_productos()
+        listar_productos(productos_auxiliar)
         print('|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||')
         if len(list_prods) > 0:
             print('||||-Carrito:')
@@ -713,11 +719,9 @@ def realizar_venta():
         id_v = input('|##-· ID: ')
 
         if id_v == '':
-            break
+            break        
 
-        
-
-        for producto in productos:
+        for producto in productos_auxiliar:
             if int(id_v) == producto['id']:
                 cant = 0
                 cant_str = ""
@@ -732,12 +736,20 @@ def realizar_venta():
                             'sub_total': (producto['precio'] * cant)  
                         }
                     total_venta = total_venta + (producto['precio'] * cant)
+                    descontar_stock(productos_auxiliar,producto['id'],cant)
                     #producto['stock'] = producto['stock'] - cant
                     prod_venta = {
                         'id_producto': producto['id'],
                         'detalle_prod': v
                     }
-                    list_prods.append(prod_venta)
+                    if len(list_prods) > 0:
+                        for prod_item in list_prods:
+                            if prod_item['id_producto'] == prod_venta['id_producto']:
+                                prod_item['detalle_prod']['cantidad'] +=  prod_venta['detalle_prod']['cantidad']
+                            else:
+                                list_prods.append(prod_venta)
+                    else:
+                        list_prods.append(prod_venta)
                 else:
                     print('|# Producto Sin Stock')
                     input('precione una tecla para continuar!')
@@ -820,7 +832,7 @@ def realizar_venta():
 
         
         for prod_v in list_prods:
-            descontar_stock(prod_v['id_producto'],prod_v['detalle_prod']['cantidad'])
+            descontar_stock(productos,prod_v['id_producto'],prod_v['detalle_prod']['cantidad'])
         ventas.append(venta)
         escribir_venta(venta)
         reescribir_productos_archivo()
@@ -860,6 +872,7 @@ def listar_ventas():
     print('|# Lista de Ventas')
     if len(ventas) == 0:
         print('|  ·No se emcontraron ventas!')
+        input('precione una tecla para continuar!')
         return
     for venta in ventas:
         print(f'o- Venta Nroº: {venta['id_venta']}')
@@ -1096,6 +1109,7 @@ def estadisticas_generales():
 #------                                ------#
 #--------     Funciones auxiliar     --------#
 #------                                ------#
+
 #   _______________________________________
 #|--| Sincronizacion de datos con Archivo |-----------------------------------------------------
 def sincronisar_datos():
@@ -1140,7 +1154,7 @@ while True:
             abm_producto()
         case "2":
             print('|·# Productos')
-            listar_productos()
+            listar_productos(productos)
             input('precione una tecla para continuar!')
         case "3":
             mod_stock_prod()
